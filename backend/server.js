@@ -1,15 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const taskRoutes = require('./routes/taskRoutes');
 const userRoutes = require("./routes/userRoutes");
 const authMiddleware = require("./middleware/authMiddleware");
-
+const cors = require('cors');
 require("dotenv").config();
 
 const app = express();
-
-// Middlewares
-app.use(express.json());
-app.use("/api/users", userRoutes);
 
 // Connect to MongoDB
 mongoose
@@ -19,6 +16,12 @@ mongoose
   })
   .then(() => console.log("MongoDB Connected!"))
   .catch((err) => console.log("MongoDB connection error: ", err));
+// Middlewares
+app.use(express.json());
+app.use(cors());
+
+app.use("/api/users", userRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // Sample Route
 app.get("/", (req, res) => {
