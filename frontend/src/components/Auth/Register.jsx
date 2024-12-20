@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import axios from "axios";
 import Navbar from "../Navbar";
@@ -12,19 +12,36 @@ const Register = () => {
 
   const navigate = useNavigate();
 
+  let token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token) {
+      navigate("/home");
+    }
+  }, []);
+
   const handleClick = () => {
-    axios.post("http://localhost:5000/api/users/register", {name: name, email: email, password: password})
-    .then((response) => {
-      localStorage.setItem("token", response.data.token);
-      const token = localStorage.getItem("token");
-      if(token){
-        navigate('/home');
-      }
-    })
-    .catch((err) => {
-      setError("Invalid credentials");
-    });
-  }
+    axios
+      .post("http://localhost:5000/api/users/register", {
+        name: name,
+        email: email,
+        password: password,
+      })
+      .then((response) => {
+        localStorage.setItem("token", response.data.token);
+        const token = localStorage.getItem("token");
+        if (token) {
+          localStorage.setItem(
+            "userDetails",
+            JSON.stringify(response.data.user)
+          );
+          navigate("/home");
+        }
+      })
+      .catch((err) => {
+        setError("Invalid credentials");
+      });
+  };
 
   return (
     <div
@@ -64,7 +81,7 @@ const Register = () => {
           </Typography>
 
           <TextField
-            onChange={ obj=>pickName(obj.target.value) }
+            onChange={(obj) => pickName(obj.target.value)}
             type="text"
             placeholder="Enter Your Name"
             variant="outlined"
@@ -79,7 +96,7 @@ const Register = () => {
           />
 
           <TextField
-            onChange={ obj=>pickEmail(obj.target.value) }
+            onChange={(obj) => pickEmail(obj.target.value)}
             type="text"
             placeholder="Enter Your Email"
             variant="outlined"
@@ -96,7 +113,7 @@ const Register = () => {
           <br />
 
           <TextField
-            onChange={ obj=>pickPassword(obj.target.value) }
+            onChange={(obj) => pickPassword(obj.target.value)}
             type="password"
             placeholder="Enter Your Password"
             variant="outlined"

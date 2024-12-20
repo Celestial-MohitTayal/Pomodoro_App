@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../components/Navbar";
+import PomodoroTimer from "../components/Timer/pomodoroTimer";
 import { Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
+  let token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -16,45 +27,42 @@ const Home = () => {
       >
         <Box
           sx={{
-            flex: 1, // Ensures this Box takes up remaining space
+            flex: 1,
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            padding: 4, // Adds spacing inside this Box
-            gap: 3, // Adds spacing between elements vertically
+            padding: 4,
+            gap: 3,
           }}
         >
-          {/* Hero Section */}
+          {/* Timer Section */}
           <Box
             sx={{
               padding: 3,
-              width: { lg: "60%", sm: "80%", xs: "90%" }, // More responsive width
+              width: { lg: "60%", sm: "80%", xs: "90%" },
               backgroundColor: "#3C3C3C",
               color: "#2BC59A",
               borderRadius: 2,
               boxShadow: 3,
               textAlign: "center",
-              marginBottom: 4, // Adds space below the hero section
+              marginBottom: 4,
             }}
           >
-            <h1>Welcome to Focus Sessions</h1>
-            <p>
-              Track your tasks and stay productive with the Pomodoro technique.
-            </p>
+            <PomodoroTimer />
           </Box>
 
-          {/* Two Box Sections */}
+          {/* Task Sections */}
           <Box
             sx={{
               display: "flex",
-              flexDirection: { xs: "column", sm: "row" }, // Stacks vertically on small screens
+              flexDirection: { xs: "column", sm: "row" },
               justifyContent: "space-between",
-              gap: 3, // Adds space between each Box
-              width: "100%", // Ensures the boxes span the entire width
+              gap: 3,
+              width: "100%",
             }}
           >
-            {/* First Box */}
+            {/* Task List */}
             <Box
               sx={{
                 padding: 3,
@@ -70,7 +78,7 @@ const Home = () => {
               <p>Track and focus on your first task.</p>
             </Box>
 
-            {/* Second Box */}
+            {/* Task Details */}
             <Box
               sx={{
                 padding: 3,

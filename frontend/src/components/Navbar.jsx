@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -9,10 +9,23 @@ import {
 } from "@mui/material";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { removeUser } from "../store/userSlice";
+import { addUser } from "../store/userSlice";
 
 const Navbar = () => {
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!token) {
+      dispatch(removeUser());
+    } else {
+      dispatch(addUser(userDetails));
+    }
+  }, []);
 
   return (
     <AppBar
@@ -56,16 +69,17 @@ const Navbar = () => {
                 "&:hover": { transform: "scale(1.05)" },
               }}
             >
-              Mohit Tayal
+              {userDetails.name}
             </Button>
 
             <IconButton
               onClick={() => {
+                localStorage.removeItem("userDetails");
                 localStorage.removeItem("token");
                 navigate("/");
               }}
               sx={{
-                color: "white",
+                color: "#D3D3D3",
                 transition: "transform 0.075s",
                 "&:hover": { transform: "scale(1.05)" },
               }}

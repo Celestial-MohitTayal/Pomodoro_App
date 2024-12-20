@@ -11,6 +11,13 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+  let token = localStorage.getItem("token");
+  useEffect(() => {
+    if (token) {
+      navigate("/home");
+    }
+  }, []);
+
   const handleClick = () => {
     axios
       .post("http://localhost:5000/api/users/login", {
@@ -21,6 +28,10 @@ const Login = () => {
         localStorage.setItem("token", response.data.token);
         const token = localStorage.getItem("token");
         if (token) {
+          localStorage.setItem(
+            "userDetails",
+            JSON.stringify(response.data.user)
+          );
           navigate("/home");
         }
       })
