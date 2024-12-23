@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
 import Navbar from "../components/Navbar";
-import PomodoroTimer from "../components/Timer/pomodoroTimer";
-import { Box } from "@mui/material";
+import Pomodoro from "../components/Timer/pomodoro";
+import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import PomodoroDetails from "../components/Timer/pomodoroDetails";
 
 const Home = () => {
+  const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
   let token = localStorage.getItem("token");
 
@@ -13,6 +16,10 @@ const Home = () => {
       navigate("/");
     }
   }, []);
+
+  const openDialogBox = () => {
+    setOpenDialog(true);
+  };
 
   return (
     <>
@@ -36,6 +43,21 @@ const Home = () => {
             gap: 3,
           }}
         >
+          <Typography variant="body2" sx={{ color: "#c4c4c4" }}>
+            Want to know more about Pomodoron Technique?
+            <Button
+              onClick={openDialogBox}
+              sx={{
+                color: "#c4c4c4",
+                fontWeight: "bold",
+                paddingLeft: 1,
+                paddingRight: 0,
+                "&:hover": { color: "white" },
+              }}
+            >
+              Click Here
+            </Button>
+          </Typography>
           {/* Timer Section */}
           <Box
             sx={{
@@ -49,7 +71,7 @@ const Home = () => {
               marginBottom: 4,
             }}
           >
-            <PomodoroTimer />
+            <Pomodoro />
           </Box>
 
           {/* Task Sections */}
@@ -95,6 +117,11 @@ const Home = () => {
             </Box>
           </Box>
         </Box>
+
+        <PomodoroDetails
+          openDialog={openDialog}
+          setOpenDialog={setOpenDialog}
+        />
       </div>
     </>
   );
