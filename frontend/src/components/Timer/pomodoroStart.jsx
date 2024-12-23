@@ -8,7 +8,7 @@ const PomodoroStart = ({ setIsStarted }) => {
 
   return (
     <>
-      <Typography variant="h5" sx={{ color: "#2BC59A", marginTop: "24px" }}>
+      <Typography variant="h5" sx={{ color: "#2BC59A", margin: "16px" }}>
         Ready, Set, Focus!
       </Typography>
       <Typography variant="body1" sx={{ color: "#2BC59A" }}>

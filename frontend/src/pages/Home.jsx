@@ -5,6 +5,8 @@ import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PomodoroDetails from "../components/Timer/pomodoroDetails";
+import TaskList from "../components/Tasks/TaskList";
+import TaskDetails from "../components/Tasks/TaskDetails";
 
 const Home = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -87,7 +89,7 @@ const Home = () => {
             {/* Task List */}
             <Box
               sx={{
-                padding: 3,
+                padding: 2,
                 width: { lg: "45%", sm: "48%", xs: "90%" },
                 backgroundColor: "#3C3C3C",
                 color: "#2BC59A",
@@ -96,14 +98,15 @@ const Home = () => {
                 textAlign: "center",
               }}
             >
-              <h1>Task List</h1>
-              <p>Track and focus on your first task.</p>
+              {/* <h1>Task List</h1>
+              <p>Track and focus on your first task.</p> */}
+              <TaskList />
             </Box>
 
             {/* Task Details */}
             <Box
               sx={{
-                padding: 3,
+                padding: 2,
                 width: { lg: "45%", sm: "48%", xs: "90%" },
                 backgroundColor: "#3C3C3C",
                 color: "#2BC59A",
@@ -112,8 +115,9 @@ const Home = () => {
                 textAlign: "center",
               }}
             >
-              <h1>Task Details</h1>
-              <p>Track and focus on your second task.</p>
+              <TaskDetails />
+              {/* <h1>Task Details</h1>
+              <p>Track and focus on your second task.</p> */}
             </Box>
           </Box>
         </Box>

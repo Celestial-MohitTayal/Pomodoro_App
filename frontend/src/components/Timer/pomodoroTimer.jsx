@@ -71,7 +71,7 @@ const PomodoroTimer = ({ setIsStarted }) => {
             setSessionMessage("");
           }, 3000);
         }
-      }, 1);
+      }, 0.5);
       return () => clearInterval(intervalPom);
     }
   }, [isRunning, seconds, minute, isBreak]);
