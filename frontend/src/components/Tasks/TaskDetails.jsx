@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Container,
   TextField,
@@ -16,40 +17,81 @@ import {
   DialogTitle,
   Box,
 } from "@mui/material";
-import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
+import AddIcon from "@mui/icons-material/Add";
 
-const TaskDetails = () => {
+import { Delete as CloseIcon, Edit as EditIcon } from "@mui/icons-material";
+
+const TaskDetails = ({ toggle }) => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedTaskText, setEditedTaskText] = useState("");
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const taskId = localStorage.getItem("taskId");
+  const token = localStorage.getItem("token");
+
+
+  const addDescription = () => {
+    axios
+      .put(
+        `http://localhost:5000/api/tasks/${taskId}`,
+        {
+          title: task[0]?.title,
+          description: descriptionList,
+          completed: task[0]?.completed,
+        },
+        { headers: { Authorization: "Bearer " + token } }
+      )
+      .then((response) => {
+        const updatedTasks = tasks.map((item) =>
+          item._id === taskId
+            ? { ...item, description: response.data.description }
+            : item
+        );
+
+        // Update the tasks state with the new list
+        setTasks(updatedTasks);
+      });
+  };
+
+  const fetchData = () => {
+    axios
+      .get("http://localhost:5000/api/tasks/", {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((response) => {
+        setTasks(response.data);
+      });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [toggle]);
+
+  let task = tasks.filter((task) => task._id === taskId);
+  let descriptionList = task[0]?.description;
+
+  // useEffect(() => {
+  //   addDescription();
+  // }, [descriptionList]);
 
   // Function to handle adding new tasks
-  const addTask = () => {
-    if (newTask.trim()) {
-      setTasks([
-        ...tasks,
-        { id: Date.now(), title: newTask, completed: false, description: [] },
-      ]);
-      setNewTask("");
-    }
+  const addSubTask = () => {
+    descriptionList?.push(newTask);
+    addDescription();
   };
 
   // Function to handle task completion
   const toggleTaskCompletion = (taskId) => {
     setTasks(
-      tasks
-        .reverse()
-        .map((task) =>
-          task.id === taskId ? { ...task, completed: !task.completed } : task
-        )
+      tasks.map((task) =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task
+      )
     );
   };
 
   // Function to delete a task
-  const deleteTask = (taskId) => {
-    setTasks(tasks.filter((task) => task.id !== taskId));
+  const deleteTask = (index) => {
   };
 
   // Function to handle editing a task
@@ -82,7 +124,7 @@ const TaskDetails = () => {
         fontFamily="serif"
         gutterBottom
       >
-        Task Details
+        {task ? task[0]?.title : "Select Task"}
       </Typography>
 
       {/* To-Do List */}
@@ -97,13 +139,13 @@ const TaskDetails = () => {
         }}
       >
         <List>
-          {tasks.reverse().map((task) => (
+          {task[0]?.description?.map((task, index) => (
             <ListItem
-              key={task.id}
+              key={index}
               style={{
                 display: "flex",
                 alignItems: "center",
-                backgroundColor: task.completed ? "#d4edda" : "#3C3C3C",
+                textDecoration: task?.completed ? "line-through" : "none",
                 borderRadius: "5px",
                 marginBottom: "10px",
                 padding: "8px 12px",
@@ -112,8 +154,8 @@ const TaskDetails = () => {
               }}
             >
               <Checkbox
-                checked={task.completed}
-                onChange={() => toggleTaskCompletion(task.id)}
+                checked={task?.completed}
+                onChange={() => toggleTaskCompletion(task?._id)}
                 color="disabled"
                 sx={{
                   color: "#c4c4c4", // Checkbox border color
@@ -126,7 +168,7 @@ const TaskDetails = () => {
                 }}
               />
               <ListItemText
-                primary={task.title}
+                primary={task}
                 style={{
                   color: task.completed ? "#6c757d" : "#c4c4c4",
                   fontWeight: task.completed ? "400" : "500",
@@ -139,8 +181,8 @@ const TaskDetails = () => {
               >
                 <EditIcon />
               </IconButton>
-              <IconButton onClick={() => deleteTask(task.id)} color="secondary">
-                <DeleteIcon />
+              <IconButton onClick={() => deleteTask(index)} color="secondary">
+                <CloseIcon />
               </IconButton>
             </ListItem>
           ))}
@@ -150,8 +192,8 @@ const TaskDetails = () => {
       {/* Input field and Add button */}
       <Box display="flex" mt={2} alignItems="center">
         <TextField
-          label="Add a Sub Task"
-          variant="outlined"
+          label="Add Task Sub Topics"
+          variant="standard"
           fullWidth
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
@@ -184,22 +226,19 @@ const TaskDetails = () => {
             },
           }}
         />
-        <Button
-          variant="contained"
-          color="default"
+        <IconButton
           sx={{
-            boxShadow: 3,
-            "&:hover": { boxShadow: 6 },
-            fontSize: "14px", // Reduce font size for button
-            padding: "6px 12px", // Adjust padding to make button shorter
-            height: 40, // Reduce button height
-            minWidth: 100, // Prevent button from stretching too wide
-            marginLeft: 2, // Add some spacing between the input and button
+            color: "#2BC59A",
+            marginLeft: 2,
+            padding: "6px", // Adjust icon button size
+            height: 40,
+            width: 40,
+            "&:hover": { backgroundColor: "#c4c4c4" }, // No background on hover
           }}
-          onClick={addTask}
+          onClick={addSubTask}
         >
-          Add
-        </Button>
+          <AddIcon />
+        </IconButton>
       </Box>
 
       {/* Edit Task Dialog */}
@@ -209,6 +248,7 @@ const TaskDetails = () => {
         sx={{
           "& .MuiDialog-paper": {
             backgroundColor: "#2BC59A", // Custom dialog background color
+            padding: "10px",
           },
         }}
       >
@@ -217,12 +257,13 @@ const TaskDetails = () => {
         </DialogTitle>
         <DialogContent sx={{ backgroundColor: "#2BC59A" }}>
           <TextField
-            label="Task Title"
+            label="Edit Sub Task"
             variant="outlined"
             fullWidth
-            value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
+            value={editedTaskText}
+            onChange={(e) => setEditedTaskText(e.target.value)}
             sx={{
+              margin: "10px",
               "& .MuiOutlinedInput-root": {
                 "& fieldset": {
                   borderColor: "#3C3C3C", // Green outline

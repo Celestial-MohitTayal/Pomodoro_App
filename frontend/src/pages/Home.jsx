@@ -12,6 +12,7 @@ const Home = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
   let token = localStorage.getItem("token");
+  const [toggle, setToggle] = useState(true);
 
   useEffect(() => {
     if (!token) {
@@ -100,7 +101,7 @@ const Home = () => {
             >
               {/* <h1>Task List</h1>
               <p>Track and focus on your first task.</p> */}
-              <TaskList />
+              <TaskList setToggle={setToggle} />
             </Box>
 
             {/* Task Details */}
@@ -115,7 +116,7 @@ const Home = () => {
                 textAlign: "center",
               }}
             >
-              <TaskDetails />
+              <TaskDetails toggle={toggle} />
               {/* <h1>Task Details</h1>
               <p>Track and focus on your second task.</p> */}
             </Box>

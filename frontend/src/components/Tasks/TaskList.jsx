@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   TextField,
@@ -17,39 +17,86 @@ import {
   Box,
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
+import axios from "axios";
+import TaskDetails from "./TaskDetails";
 
-const TaskList = () => {
+const TaskList = ({ setToggle }) => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editedTaskText, setEditedTaskText] = useState("");
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
+  const token = localStorage.getItem("token");
+
+  const fetchData = () => {
+    axios
+      .get("http://localhost:5000/api/tasks/", {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then((response) => {
+        setTasks(response.data);
+      });
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const selectedTask = (taskId) => {
+    localStorage.setItem("taskId", taskId);
+    setToggle((prev) => !prev);
+  };
+
   // Function to handle adding new tasks
   const addTask = () => {
     if (newTask.trim()) {
-      setTasks([
-        ...tasks,
-        { id: Date.now(), title: newTask, completed: false, description: [] },
-      ]);
+      axios
+        .post(
+          "http://localhost:5000/api/tasks/",
+          { title: newTask, description: [] },
+          { headers: { Authorization: "Bearer " + token } }
+        )
+        .then((response) => {
+          setTasks([...tasks, response.data]);
+        });
       setNewTask("");
     }
   };
 
   // Function to handle task completion
   const toggleTaskCompletion = (taskId) => {
-    setTasks(
-      tasks
-        .reverse()
-        .map((task) =>
-          task.id === taskId ? { ...task, completed: !task.completed } : task
-        )
-    );
+    let task = tasks.filter((task) => task._id === taskId);
+    axios
+      .put(
+        `http://localhost:5000/api/tasks/${taskId}`,
+        {
+          title: task[0].title,
+          description: task[0].description,
+          completed: !task[0].completed,
+        },
+        { headers: { Authorization: "Bearer " + token } }
+      )
+      .then((response) => {
+        const updatedTasks = tasks.map((item) =>
+          item._id === taskId
+            ? { ...item, completed: response.data.completed }
+            : item
+        );
+
+        // Update the tasks state with the new list
+        setTasks(updatedTasks);
+      });
   };
 
   // Function to delete a task
   const deleteTask = (taskId) => {
-    setTasks(tasks.filter((task) => task.id !== taskId));
+    axios
+      .delete(`http://localhost:5000/api/tasks/${taskId}`, {
+        headers: { Authorization: "Bearer " + token },
+      })
+      .then(() => {
+        fetchData();
+      });
   };
 
   // Function to handle editing a task
@@ -65,11 +112,27 @@ const TaskList = () => {
   };
 
   const handleEditTask = () => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === editingTaskId ? { ...task, text: editedTaskText } : task
+    let task = tasks.filter((task) => task._id === editingTaskId);
+    axios
+      .put(
+        `http://localhost:5000/api/tasks/${editingTaskId}`,
+        {
+          title: editedTaskText,
+          description: task[0].description,
+          completed: task[0].completed,
+        },
+        { headers: { Authorization: "Bearer " + token } }
       )
-    );
+      .then((response) => {
+        const updatedTasks = tasks.map((item) =>
+          item._id === editingTaskId
+            ? { ...item, title: response.data.title }
+            : item
+        );
+
+        // Update the tasks state with the new list
+        setTasks(updatedTasks);
+      });
     closeEditDialog();
   };
 
@@ -85,37 +148,40 @@ const TaskList = () => {
         Tasks List
       </Typography>
 
-      {/* Input field and Add button */}
-      {/* <Box display="flex" mb={2} gap={2}>
+      {/* Add Task Form */}
+      <Box display="flex" mb={2} alignItems="center">
         <TextField
-          label="New Task"
+          label="Add a Task Title"
           variant="outlined"
           fullWidth
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
           sx={{
             "& .MuiOutlinedInput-root": {
+              height: 40, // Reduce height of the input
               "& fieldset": {
-                borderColor: "#2BC59A", // White outline
+                borderColor: "#2BC59A", // Border color
               },
               "&:hover fieldset": {
-                borderColor: "#2BC59A", // White outline on hover
+                borderColor: "#2BC59A", // Border color on hover
               },
               "&.Mui-focused fieldset": {
-                borderColor: "#2BC59A", // White outline when focused
+                borderColor: "#2BC59A", // Border color when focused
               },
             },
             "& .MuiInputLabel-root": {
-              color: "#c4c4c4", // White label
+              color: "#c4c4c4", // Label color
+              fontSize: "0.9rem", // Reduce label font size
             },
             "& .MuiInputBase-input": {
-              color: "#c4c4c4", // White text
+              color: "#c4c4c4", // Input text color
+              padding: "6px 10px", // Reduce padding inside the input
             },
             "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#2BC59A", // White outline
+              borderColor: "#2BC59A", // Outline border color
             },
             "& .MuiInputBase-input::placeholder": {
-              color: "#2BC59A", // White placeholder text
+              color: "#2BC59A", // Placeholder text color
             },
           }}
         />
@@ -125,67 +191,17 @@ const TaskList = () => {
           sx={{
             boxShadow: 3,
             "&:hover": { boxShadow: 6 },
-            fontSize: "16px",
+            fontSize: "14px", // Reduce font size for button
+            padding: "6px 12px", // Adjust padding to make button shorter
+            height: 40, // Reduce button height
+            minWidth: 100, // Prevent button from stretching too wide
+            marginLeft: 2, // Add some spacing between the input and button
           }}
           onClick={addTask}
         >
           Add
         </Button>
-      </Box> */}
-      <Box display="flex" mb={2} alignItems="center">
-              <TextField
-                label="Add a Sub Task"
-                variant="outlined"
-                fullWidth
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    height: 40, // Reduce height of the input
-                    "& fieldset": {
-                      borderColor: "#2BC59A", // Border color
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#2BC59A", // Border color on hover
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#2BC59A", // Border color when focused
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "#c4c4c4", // Label color
-                    fontSize: "0.9rem", // Reduce label font size
-                  },
-                  "& .MuiInputBase-input": {
-                    color: "#c4c4c4", // Input text color
-                    padding: "6px 10px", // Reduce padding inside the input
-                  },
-                  "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#2BC59A", // Outline border color
-                  },
-                  "& .MuiInputBase-input::placeholder": {
-                    color: "#2BC59A", // Placeholder text color
-                  },
-                }}
-              />
-              <Button
-                variant="contained"
-                color="default"
-                sx={{
-                  boxShadow: 3,
-                  "&:hover": { boxShadow: 6 },
-                  fontSize: "14px", // Reduce font size for button
-                  padding: "6px 12px", // Adjust padding to make button shorter
-                  height: 40, // Reduce button height
-                  minWidth: 100, // Prevent button from stretching too wide
-                  marginLeft: 2, // Add some spacing between the input and button
-                }}
-                onClick={addTask}
-              >
-                Add
-              </Button>
-            </Box>
-      
+      </Box>
 
       {/* To-Do List */}
       <Paper
@@ -199,9 +215,10 @@ const TaskList = () => {
         }}
       >
         <List>
-          {tasks.reverse().map((task) => (
+          {tasks.map((task) => (
             <ListItem
-              key={task.id}
+              onClick={() => selectedTask(task?._id)}
+              key={task?._id}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -214,8 +231,8 @@ const TaskList = () => {
               }}
             >
               <Checkbox
-                checked={task.completed}
-                onChange={() => toggleTaskCompletion(task.id)}
+                checked={task?.completed}
+                onChange={() => toggleTaskCompletion(task?._id)}
                 color="disabled"
                 sx={{
                   color: "#c4c4c4", // Checkbox border color
@@ -235,13 +252,16 @@ const TaskList = () => {
                 }}
               />
               <IconButton
-                onClick={() => openEditDialogHandler(task.id, task.title)}
+                onClick={() => openEditDialogHandler(task?._id, task?.title)}
                 color="primary"
                 style={{ marginRight: "10px" }}
               >
                 <EditIcon />
               </IconButton>
-              <IconButton onClick={() => deleteTask(task.id)} color="secondary">
+              <IconButton
+                onClick={() => deleteTask(task?._id)}
+                color="secondary"
+              >
                 <DeleteIcon />
               </IconButton>
             </ListItem>
@@ -262,14 +282,15 @@ const TaskList = () => {
         <DialogTitle sx={{ backgroundColor: "#2BC59A", color: "#303030" }}>
           Edit Task
         </DialogTitle>
-        <DialogContent sx={{ backgroundColor: "#2BC59A",}}>
+        <DialogContent sx={{ backgroundColor: "#2BC59A" }}>
           <TextField
             label="Task Title"
             variant="outlined"
             fullWidth
-            value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
+            value={editedTaskText}
+            onChange={(e) => setEditedTaskText(e.target.value)}
             sx={{
+              margin: "10px",
               "& .MuiOutlinedInput-root": {
                 "& fieldset": {
                   borderColor: "#3C3C3C", // Green outline
