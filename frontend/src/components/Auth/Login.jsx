@@ -49,10 +49,13 @@ const Login = () => {
           height: "100vh",
           width: "100vw",
           display: "flex",
+          overflow: 'hidden'
         }}
       >
         <Box
           sx={{
+            width: '100%',
+            height: '100vh',
             position: "absolute",
             top: 0,
             left: 0,
@@ -61,6 +64,7 @@ const Login = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            overflow: "hidden",
           }}
         >
           <Box

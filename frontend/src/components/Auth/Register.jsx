@@ -21,26 +21,30 @@ const Register = () => {
   }, []);
 
   const handleClick = () => {
-    axios
-      .post("http://localhost:5000/api/users/register", {
-        name: name,
-        email: email,
-        password: password,
-      })
-      .then((response) => {
-        localStorage.setItem("token", response.data.token);
-        const token = localStorage.getItem("token");
-        if (token) {
-          localStorage.setItem(
-            "userDetails",
-            JSON.stringify(response.data.user)
-          );
-          navigate("/home");
-        }
-      })
-      .catch((err) => {
-        setError("User already exists");
-      });
+    if (password == "") {
+      setError("Password Cannot be empty");
+    } else {
+      axios
+        .post("http://localhost:5000/api/users/register", {
+          name: name,
+          email: email,
+          password: password,
+        })
+        .then((response) => {
+          localStorage.setItem("token", response.data.token);
+          const token = localStorage.getItem("token");
+          if (token) {
+            localStorage.setItem(
+              "userDetails",
+              JSON.stringify(response.data.user)
+            );
+            navigate("/home");
+          }
+        })
+        .catch((err) => {
+          setError("User already exists");
+        });
+    }
   };
 
   return (
@@ -50,11 +54,14 @@ const Register = () => {
         height: "100vh",
         width: "100vw",
         display: "flex",
+        overflow: 'hidden'
       }}
     >
       <Navbar />
       <Box
         sx={{
+          width: '100%',
+          height: '100vh',
           position: "absolute",
           top: 0,
           left: 0,
@@ -63,6 +70,7 @@ const Register = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          overflow: "hidden",
         }}
       >
         <Box

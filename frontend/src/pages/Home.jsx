@@ -33,10 +33,13 @@ const Home = () => {
           height: "100vh",
           width: "100vw",
           display: "flex",
+          overflow: "hidden",
         }}
       >
         <Box
           sx={{
+            width: "100%",
+            height: "100vh",
             flex: 1,
             display: "flex",
             flexDirection: "column",
@@ -44,6 +47,7 @@ const Home = () => {
             alignItems: "center",
             padding: 4,
             gap: 3,
+            overflow: "hidden",
           }}
         >
           <Typography variant="body2" sx={{ color: "#c4c4c4" }}>
@@ -77,6 +81,19 @@ const Home = () => {
           >
             <Pomodoro />
           </Box>
+
+          <Typography
+            variant="h3"
+            component="div"
+            sx={{
+              fontFamily: "Times New Roman, serif",
+              fontWeight: "bold",
+              letterSpacing: "0.1rem",
+              color: "#c4c4c4",
+            }}
+          >
+            Task Tracker
+          </Typography>
 
           {/* Task Sections */}
           <Box
@@ -115,10 +132,7 @@ const Home = () => {
                 textAlign: "center",
               }}
             >
-              <TaskDetails
-                toggle={toggle}
-                setToggle={setToggle}
-              />
+              <TaskDetails toggle={toggle} setToggle={setToggle} />
             </Box>
           </Box>
         </Box>

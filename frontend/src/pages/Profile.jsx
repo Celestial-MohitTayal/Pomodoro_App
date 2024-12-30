@@ -17,26 +17,33 @@ const Profile = () => {
   const email = useSelector((store) => store?.user?.email);
   const token = localStorage.getItem("token");
 
-  const matchPassword = () => {
-    axios
-      .put(
-        "http://localhost:5000/api/users/profile",
-        {
-          email: email,
-          oldPassword: oldPassword,
-          newPassword: newPassword,
-        },
-        { headers: { Authorization: "Bearer " + token } }
-      )
-      .then((response) => {
-        localStorage.setItem("userDetails", JSON.stringify(response.data.user));
-        alert("Password updated successfully!");
-        setToggle((prev) => !prev);
-        setError("");
-      })
-      .catch((err) => {
-        setError("Incorrect Old Password");
-      });
+  const updatePassword = () => {
+    if (newPassword == "") {
+      setError("Password Cannot be empty");
+    } else {
+      axios
+        .put(
+          "http://localhost:5000/api/users/profile",
+          {
+            email: email,
+            oldPassword: oldPassword,
+            newPassword: newPassword,
+          },
+          { headers: { Authorization: "Bearer " + token } }
+        )
+        .then((response) => {
+          localStorage.setItem(
+            "userDetails",
+            JSON.stringify(response.data.user)
+          );
+          alert("Password updated successfully!");
+          setToggle((prev) => !prev);
+          setError("");
+        })
+        .catch((err) => {
+          setError("Incorrect Old Password");
+        });
+    }
 
     const newUserDetails = JSON.parse(localStorage.getItem("userDetails"));
     dispatch(addUser(newUserDetails));
@@ -49,11 +56,14 @@ const Profile = () => {
         height: "100vh",
         width: "100vw",
         display: "flex",
+        overflow: "hidden",
       }}
     >
       <Navbar />
       <Box
         sx={{
+          width: "100%",
+          height: "100vh",
           position: "absolute",
           top: 0,
           left: 0,
@@ -62,6 +72,7 @@ const Profile = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          overflow: "hidden",
         }}
       >
         <Box
@@ -152,7 +163,7 @@ const Profile = () => {
                 Cancel
               </Button>
               <Button
-                onClick={matchPassword}
+                onClick={updatePassword}
                 sx={{
                   color: "#c4c4c4",
                   fontWeight: "bold",

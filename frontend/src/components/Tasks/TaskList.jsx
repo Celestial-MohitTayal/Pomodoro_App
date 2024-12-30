@@ -42,11 +42,12 @@ const TaskList = ({ setToggle, toggle }) => {
     fetchData();
   }, [toggle]);
 
+  //saving task that is selected
   const selectedTask = (taskId) => {
     localStorage.setItem("taskId", taskId);
     setToggle((prev) => !prev);
   };
-  
+
   // Function to handle adding new tasks
   const addTask = () => {
     if (newTask.trim()) {
@@ -137,6 +138,13 @@ const TaskList = ({ setToggle, toggle }) => {
     closeEditDialog();
   };
 
+  // Submit form by enter
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      addTask();
+    }
+  };
+
   return (
     <Container maxWidth="sm" style={{ marginTop: "20px" }}>
       <Typography
@@ -157,6 +165,7 @@ const TaskList = ({ setToggle, toggle }) => {
           fullWidth
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
+          onKeyDown={handleKeyDown}
           sx={{
             "& .MuiOutlinedInput-root": {
               height: 40, // Reduce height of the input
@@ -205,70 +214,75 @@ const TaskList = ({ setToggle, toggle }) => {
       </Box>
 
       {/* Task List */}
-      <Paper
-        style={{
-          maxHeight: 200,
-          overflow: "auto",
-          backgroundColor: "#303030",
-          boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-          borderRadius: "8px",
-          padding: "10px",
-        }}
-      >
-        <List>
-          {tasks.map((task) => (
-            <ListItem
-              onClick={() => selectedTask(task?._id)}
-              key={task?._id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                backgroundColor: task.completed ? "#d4edda" : "#3C3C3C",
-                borderRadius: "5px",
-                marginBottom: "10px",
-                padding: "8px 12px",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                transition: "all 0.2s ease",
-              }}
-            >
-              <Checkbox
-                checked={task?.completed}
-                onChange={() => toggleTaskCompletion(task?._id)}
-                color="disabled"
-                sx={{
-                  color: "#c4c4c4",
-                  "&.Mui-checked": {
-                    color: "#6c757d",
-                  },
-                  "&:hover": {
-                    backgroundColor: "transparent",
-                  },
-                }}
-              />
-              <ListItemText
-                primary={task.title}
+      {tasks.length !== 0 && (
+        <Paper
+          elevation={3}
+          style={{
+            minHeight: 200,
+            maxHeight: 200,
+            overflow: "auto",
+            backgroundColor: "#303030",
+            boxShadow:
+              "0 4px 6px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1)",
+            borderRadius: "8px",
+            padding: "10px",
+          }}
+        >
+          <List>
+            {tasks.map((task) => (
+              <ListItem
+                onClick={() => selectedTask(task?._id)}
+                key={task?._id}
                 style={{
-                  color: task.completed ? "#6c757d" : "#c4c4c4",
-                  fontWeight: task.completed ? "400" : "500",
+                  display: "flex",
+                  alignItems: "center",
+                  backgroundColor: task.completed ? "#d4edda" : "#3C3C3C",
+                  borderRadius: "5px",
+                  marginBottom: "10px",
+                  padding: "8px 12px",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                  transition: "all 0.2s ease",
                 }}
-              />
-              <IconButton
-                onClick={() => openEditDialogHandler(task?._id, task?.title)}
-                color="primary"
-                style={{ marginRight: "10px" }}
               >
-                <EditIcon />
-              </IconButton>
-              <IconButton
-                onClick={() => deleteTask(task?._id)}
-                color="secondary"
-              >
-                <DeleteIcon />
-              </IconButton>
-            </ListItem>
-          ))}
-        </List>
-      </Paper>
+                <Checkbox
+                  checked={task?.completed}
+                  onChange={() => toggleTaskCompletion(task?._id)}
+                  color="disabled"
+                  sx={{
+                    color: "#c4c4c4",
+                    "&.Mui-checked": {
+                      color: "#6c757d",
+                    },
+                    "&:hover": {
+                      backgroundColor: "transparent",
+                    },
+                  }}
+                />
+                <ListItemText
+                  primary={task.title}
+                  style={{
+                    color: task.completed ? "#6c757d" : "#c4c4c4",
+                    fontWeight: task.completed ? "400" : "500",
+                  }}
+                />
+                <IconButton
+                  onClick={() => openEditDialogHandler(task?._id, task?.title)}
+                  color="primary"
+                  style={{ marginRight: "10px" }}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  onClick={() => deleteTask(task?._id)}
+                  color="secondary"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+      )}
 
       {/* Edit Task Dialog */}
       <Dialog

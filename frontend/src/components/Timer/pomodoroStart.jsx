@@ -22,11 +22,14 @@ const PomodoroStart = ({ setIsStarted }) => {
           boxShadow: 3,
           "&:hover": { boxShadow: 6 },
           fontSize: "16px",
-          marginTop: "24px",
+          marginTop: "28px",
         }}
       >
         Get Started!
       </Button>
+      <Typography variant="body1" sx={{ color: "#8f8f8f", marginTop: "8px",}}>
+        Click on above button to start focusing.
+      </Typography>
     </>
   );
 };
