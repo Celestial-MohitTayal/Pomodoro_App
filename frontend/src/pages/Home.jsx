@@ -10,9 +10,9 @@ import TaskDetails from "../components/Tasks/TaskDetails";
 
 const Home = () => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [toggle, setToggle] = useState(true);
   const navigate = useNavigate();
   let token = localStorage.getItem("token");
-  const [toggle, setToggle] = useState(true);
 
   useEffect(() => {
     if (!token) {

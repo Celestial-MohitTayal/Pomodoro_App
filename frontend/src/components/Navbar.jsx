@@ -9,20 +9,22 @@ import {
 } from "@mui/material";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { removeUser } from "../store/userSlice";
 import { addUser } from "../store/userSlice";
+import store from "../store/store";
 
 const Navbar = () => {
-  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userName = useSelector((store) => store?.user?.name);
 
   useEffect(() => {
     if (!token) {
       dispatch(removeUser());
     } else {
+      const userDetails = JSON.parse(localStorage.getItem("userDetails"));
       dispatch(addUser(userDetails));
     }
   }, []);
@@ -69,7 +71,7 @@ const Navbar = () => {
                 "&:hover": { transform: "scale(1.05)" },
               }}
             >
-              {userDetails.name}
+              {userName}
             </Button>
 
             <IconButton

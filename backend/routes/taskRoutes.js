@@ -13,7 +13,6 @@ const router = express.Router();
 router.post("/", authMiddleware, createTask); // Create task
 router.get("/", authMiddleware, getTasks); // Get all tasks
 router.put("/:id", authMiddleware, updateTask); // Update task
-// router.put('/:id', authMiddleware, addSubTask); // Update task
 router.delete("/:id", authMiddleware, deleteTask); // Delete task
 
 module.exports = router;

@@ -39,7 +39,7 @@ const Register = () => {
         }
       })
       .catch((err) => {
-        setError("Invalid credentials");
+        setError("User already exists");
       });
   };
 

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Grid, Typography, Snackbar } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import alarmSound from "../../assets/alarm_beeps.mp3";
 
 const PomodoroTimer = ({ setIsStarted }) => {
   const [isRunning, setIsRunning] = useState(false);
@@ -11,7 +12,7 @@ const PomodoroTimer = ({ setIsStarted }) => {
   const [minute, setMinute] = useState(25);
   const [seconds, setSeconds] = useState(0);
   const [sessionMessage, setSessionMessage] = useState("");
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const alarmRef = useRef();
 
   useEffect(() => {
     if (!isRunning) {
@@ -45,13 +46,13 @@ const PomodoroTimer = ({ setIsStarted }) => {
 
         if (minute === 0 && seconds === 0) {
           setIsRunning(false);
-          setOpenSnackbar(true);
+          alarmRef.current.play();
           if (!isBreak) {
             if (count === 3) {
               setMinute(0);
               setSeconds(0);
               setSessionMessage(
-                "Yayy! You did good! - Now take a long break and comeback later"
+                "Yayy! You did good! - Now take a long break and comeback later."
               );
             } else {
               setMinute(0);
@@ -67,7 +68,7 @@ const PomodoroTimer = ({ setIsStarted }) => {
           }
           setTimeout(() => {
             setIsBreak((prevIsBreak) => !prevIsBreak);
-            setOpenSnackbar(false);
+            alarmRef.current.pause();
             setSessionMessage("");
           }, 3000);
         }
@@ -115,7 +116,7 @@ const PomodoroTimer = ({ setIsStarted }) => {
         {seconds < 10 ? `0${seconds}` : seconds}
       </Typography>
 
-      {sessionMessage && (
+      {sessionMessage ? (
         <Typography
           variant="body1"
           sx={{
@@ -126,65 +127,60 @@ const PomodoroTimer = ({ setIsStarted }) => {
         >
           {sessionMessage}
         </Typography>
+      ) : (
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item>
+            <Button
+              variant="contained"
+              color="default"
+              onClick={startTimer}
+              startIcon={<PlayArrowIcon />}
+              sx={{
+                boxShadow: 3,
+                "&:hover": { boxShadow: 6 },
+                fontSize: "16px",
+              }}
+            >
+              Start
+            </Button>
+          </Grid>
+
+          <Grid item>
+            <Button
+              variant="contained"
+              color="default"
+              onClick={pauseTimer}
+              startIcon={<PauseIcon />}
+              sx={{
+                boxShadow: 3,
+                "&:hover": { boxShadow: 6 },
+                fontSize: "16px",
+              }}
+            >
+              Pause
+            </Button>
+          </Grid>
+
+          <Grid item>
+            <Button
+              variant="contained"
+              color="default"
+              onClick={resetTimer}
+              startIcon={<RestartAltIcon />}
+              sx={{
+                boxShadow: 3,
+                "&:hover": { boxShadow: 6 },
+                fontSize: "16px",
+              }}
+            >
+              Reset
+            </Button>
+          </Grid>
+        </Grid>
       )}
-
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item>
-          <Button
-            variant="contained"
-            color="default"
-            onClick={startTimer}
-            startIcon={<PlayArrowIcon />}
-            sx={{
-              boxShadow: 3,
-              "&:hover": { boxShadow: 6 },
-              fontSize: "16px",
-            }}
-          >
-            Start
-          </Button>
-        </Grid>
-
-        <Grid item>
-          <Button
-            variant="contained"
-            color="default"
-            onClick={pauseTimer}
-            startIcon={<PauseIcon />}
-            sx={{
-              boxShadow: 3,
-              "&:hover": { boxShadow: 6 },
-              fontSize: "16px",
-            }}
-          >
-            Pause
-          </Button>
-        </Grid>
-
-        <Grid item>
-          <Button
-            variant="contained"
-            color="default"
-            onClick={resetTimer}
-            startIcon={<RestartAltIcon />}
-            sx={{
-              boxShadow: 3,
-              "&:hover": { boxShadow: 6 },
-              fontSize: "16px",
-            }}
-          >
-            Reset
-          </Button>
-        </Grid>
-      </Grid>
-
-      {/* Snackbar Popup for session over message */}
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={() => setOpenSnackbar(false)}
-        message={sessionMessage}
-      />
+      
+      {/* Alarm Clock */}
+      <audio src={alarmSound} ref={alarmRef}></audio>
     </>
   );
 };
