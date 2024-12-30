@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
-import Navbar from "../components/Navbar";
-import Pomodoro from "../components/Timer/pomodoro";
-import { Box, Typography, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import PomodoroDetails from "../components/Timer/pomodoroDetails";
-import TaskList from "../components/Tasks/TaskList";
 import TaskDetails from "../components/Tasks/TaskDetails";
+import { Box, Typography, Button } from "@mui/material";
+import Pomodoro from "../components/Timer/pomodoro";
+import TaskList from "../components/Tasks/TaskList";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 const Home = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [toggle, setToggle] = useState(true);
   const navigate = useNavigate();
+
   let token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -61,6 +61,7 @@ const Home = () => {
               Click Here
             </Button>
           </Typography>
+
           {/* Timer Section */}
           <Box
             sx={{
@@ -99,9 +100,7 @@ const Home = () => {
                 textAlign: "center",
               }}
             >
-              {/* <h1>Task List</h1>
-              <p>Track and focus on your first task.</p> */}
-              <TaskList setToggle={setToggle} />
+              <TaskList setToggle={setToggle} toggle={toggle} />
             </Box>
 
             {/* Task Details */}
@@ -116,9 +115,10 @@ const Home = () => {
                 textAlign: "center",
               }}
             >
-              <TaskDetails toggle={toggle} />
-              {/* <h1>Task Details</h1>
-              <p>Track and focus on your second task.</p> */}
+              <TaskDetails
+                toggle={toggle}
+                setToggle={setToggle}
+              />
             </Box>
           </Box>
         </Box>

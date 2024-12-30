@@ -19,7 +19,7 @@ import {
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import axios from "axios";
 
-const TaskList = ({ setToggle }) => {
+const TaskList = ({ setToggle, toggle }) => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
   const [editingTaskId, setEditingTaskId] = useState(null);
@@ -40,13 +40,13 @@ const TaskList = ({ setToggle }) => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [toggle]);
 
   const selectedTask = (taskId) => {
     localStorage.setItem("taskId", taskId);
     setToggle((prev) => !prev);
   };
-
+  
   // Function to handle adding new tasks
   const addTask = () => {
     if (newTask.trim()) {
@@ -65,14 +65,15 @@ const TaskList = ({ setToggle }) => {
 
   // Function to handle task completion
   const toggleTaskCompletion = (taskId) => {
+    setToggle((prev) => !prev);
     let task = tasks.filter((task) => task._id === taskId);
     axios
       .put(
         `http://localhost:5000/api/tasks/${taskId}`,
         {
-          title: task[0].title,
-          description: task[0].description,
-          completed: !task[0].completed,
+          title: task[0]?.title,
+          description: task[0]?.description,
+          completed: !task[0]?.completed,
         },
         { headers: { Authorization: "Bearer " + token } }
       )

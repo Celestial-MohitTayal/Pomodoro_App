@@ -43,7 +43,9 @@ const TaskDetails = ({ toggle }) => {
       .then((response) => {
         setTasks(response.data);
         let task = tasks?.filter((task) => task._id === taskId);
-        setDescriptionList(task[0]?.description);
+        if (task[0]?.description) {
+          setDescriptionList(task[0]?.description);
+        }
       });
   };
 
