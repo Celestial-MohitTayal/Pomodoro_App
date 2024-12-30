@@ -8,7 +8,7 @@ const createTask = async (req, res) => {
     const task = new Task({
       title,
       description,
-      user: req.user.id, // Associate the task with the logged-in user
+      user: req.user.id,
     });
 
     await task.save();
@@ -36,29 +36,15 @@ const updateTask = async (req, res) => {
   try {
     const task = await Task.findByIdAndUpdate(
       id,
-      { title, $push: { description: description }, completed },
+      { title, description, completed },
       { new: true }
     );
-    console.log(task);
     if (!task) return res.status(404).json({ message: "Task not found" });
     res.status(200).json(task);
   } catch (err) {
     res.status(500).json({ message: "Error updating task", error: err });
   }
 };
-
-// const addSubTask = async(req,res)=>{
-//   const { id } = req.params;
-//   const {description} = req.body;
-//   try {
-//     const task = await Task.findByIdAndUpdate(id, {  $push: {description: description} }, { new: true });
-//     console.log(task);
-//     if (!task) return res.status(404).json({ message: 'Task not found' });
-//     res.status(200).json(task);
-//   } catch (err) {
-//     res.status(500).json({ message: 'Error updating task', error: err });
-//   }
-// }
 
 // Delete a task
 const deleteTask = async (req, res) => {

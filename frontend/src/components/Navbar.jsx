@@ -76,6 +76,7 @@ const Navbar = () => {
               onClick={() => {
                 localStorage.removeItem("userDetails");
                 localStorage.removeItem("token");
+                localStorage.removeItem("taskId");
                 navigate("/");
               }}
               sx={{

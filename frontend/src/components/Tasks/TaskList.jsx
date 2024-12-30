@@ -18,7 +18,6 @@ import {
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import axios from "axios";
-import TaskDetails from "./TaskDetails";
 
 const TaskList = ({ setToggle }) => {
   const [tasks, setTasks] = useState([]);
@@ -38,6 +37,7 @@ const TaskList = ({ setToggle }) => {
         setTasks(response.data);
       });
   };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -203,7 +203,7 @@ const TaskList = ({ setToggle }) => {
         </Button>
       </Box>
 
-      {/* To-Do List */}
+      {/* Task List */}
       <Paper
         style={{
           maxHeight: 200,
@@ -235,12 +235,12 @@ const TaskList = ({ setToggle }) => {
                 onChange={() => toggleTaskCompletion(task?._id)}
                 color="disabled"
                 sx={{
-                  color: "#c4c4c4", // Checkbox border color
+                  color: "#c4c4c4",
                   "&.Mui-checked": {
-                    color: "#6c757d", // Checkmark color
+                    color: "#6c757d",
                   },
                   "&:hover": {
-                    backgroundColor: "transparent", // Optional: Remove hover background
+                    backgroundColor: "transparent",
                   },
                 }}
               />
