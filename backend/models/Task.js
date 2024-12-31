@@ -6,12 +6,12 @@ const taskSchema = new mongoose.Schema({
         required: true,
     },
     description: {
-        type: String,
+        type: Array,
         required: true,
     },
     completed: {
         type: Boolean,
-        default: true,
+        default: false,
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
