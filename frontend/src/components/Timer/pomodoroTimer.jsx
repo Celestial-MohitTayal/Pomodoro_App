@@ -70,7 +70,7 @@ const PomodoroTimer = ({ setIsStarted }) => {
             setIsBreak((prevIsBreak) => !prevIsBreak);
             alarmRef.current.pause();
             setSessionMessage("");
-          }, 3000);
+          }, 5000);
         }
       }, 0.5);
       return () => clearInterval(intervalPom);

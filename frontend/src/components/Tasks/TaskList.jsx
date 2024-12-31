@@ -28,11 +28,11 @@ const TaskList = ({ setToggle, toggle }) => {
 
   const token = localStorage.getItem("token");
 
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = import.meta.env.VITE_SECRET_KEY;
 
   const fetchData = () => {
     axios
-      .get(`${apiUrl}/tasks`, {
+      .get(`${apiUrl}/api/tasks`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((response) => {
@@ -55,7 +55,7 @@ const TaskList = ({ setToggle, toggle }) => {
     if (newTask.trim()) {
       axios
         .post(
-          `${apiUrl}/tasks`,
+          `${apiUrl}/api/tasks`,
           { title: newTask, description: [] },
           { headers: { Authorization: "Bearer " + token } }
         )
@@ -72,7 +72,7 @@ const TaskList = ({ setToggle, toggle }) => {
     let task = tasks.filter((task) => task._id === taskId);
     axios
       .put(
-        `${apiUrl}/tasks/${taskId}`,
+        `${apiUrl}/api/tasks/${taskId}`,
         {
           title: task[0]?.title,
           description: task[0]?.description,
@@ -81,7 +81,7 @@ const TaskList = ({ setToggle, toggle }) => {
         { headers: { Authorization: "Bearer " + token } }
       )
       .then((response) => {
-        const updatedTasks = tasks.map((item) =>
+        const updatedTasks = tasks?.map((item) =>
           item._id === taskId
             ? { ...item, completed: response.data.completed }
             : item
@@ -95,7 +95,7 @@ const TaskList = ({ setToggle, toggle }) => {
   // Function to delete a task
   const deleteTask = (taskId) => {
     axios
-      .delete(`${apiUrl}/tasks/${taskId}`, {
+      .delete(`${apiUrl}/api/tasks/${taskId}`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then(() => {
@@ -112,14 +112,14 @@ const TaskList = ({ setToggle, toggle }) => {
 
   const closeEditDialog = () => {
     setOpenEditDialog(false);
-    setEditedTaskText(""); // Clear the edit field
+    setEditedTaskText("");
   };
 
   const handleEditTask = () => {
     let task = tasks.filter((task) => task._id === editingTaskId);
     axios
       .put(
-        `${apiUrl}/tasks/${editingTaskId}`,
+        `${apiUrl}/api/tasks/${editingTaskId}`,
         {
           title: editedTaskText,
           description: task[0].description,
@@ -128,7 +128,7 @@ const TaskList = ({ setToggle, toggle }) => {
         { headers: { Authorization: "Bearer " + token } }
       )
       .then((response) => {
-        const updatedTasks = tasks.map((item) =>
+        const updatedTasks = tasks?.map((item) =>
           item._id === editingTaskId
             ? { ...item, title: response.data.title }
             : item
@@ -170,30 +170,30 @@ const TaskList = ({ setToggle, toggle }) => {
           onKeyDown={handleKeyDown}
           sx={{
             "& .MuiOutlinedInput-root": {
-              height: 40, // Reduce height of the input
+              height: 40,
               "& fieldset": {
-                borderColor: "#2BC59A", // Border color
+                borderColor: "#2BC59A",
               },
               "&:hover fieldset": {
-                borderColor: "#2BC59A", // Border color on hover
+                borderColor: "#2BC59A",
               },
               "&.Mui-focused fieldset": {
-                borderColor: "#2BC59A", // Border color when focused
+                borderColor: "#2BC59A",
               },
             },
             "& .MuiInputLabel-root": {
-              color: "#c4c4c4", // Label color
-              fontSize: "0.9rem", // Reduce label font size
+              color: "#c4c4c4",
+              fontSize: "0.9rem",
             },
             "& .MuiInputBase-input": {
-              color: "#c4c4c4", // Input text color
-              padding: "6px 10px", // Reduce padding inside the input
+              color: "#c4c4c4",
+              padding: "6px 10px",
             },
             "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#2BC59A", // Outline border color
+              borderColor: "#2BC59A",
             },
             "& .MuiInputBase-input::placeholder": {
-              color: "#2BC59A", // Placeholder text color
+              color: "#2BC59A",
             },
           }}
         />
@@ -203,11 +203,11 @@ const TaskList = ({ setToggle, toggle }) => {
           sx={{
             boxShadow: 3,
             "&:hover": { boxShadow: 6 },
-            fontSize: "14px", // Reduce font size for button
-            padding: "6px 12px", // Adjust padding to make button shorter
-            height: 40, // Reduce button height
-            minWidth: 100, // Prevent button from stretching too wide
-            marginLeft: 2, // Add some spacing between the input and button
+            fontSize: "14px",
+            padding: "6px 12px",
+            height: 40,
+            minWidth: 100,
+            marginLeft: 2,
           }}
           onClick={addTask}
         >
@@ -216,7 +216,6 @@ const TaskList = ({ setToggle, toggle }) => {
       </Box>
 
       {/* Task List */}
-      {tasks.length !== 0 && (
         <Paper
           elevation={3}
           style={{
@@ -231,7 +230,7 @@ const TaskList = ({ setToggle, toggle }) => {
           }}
         >
           <List>
-            {tasks.map((task) => (
+            {tasks?.map((task) => (
               <ListItem
                 onClick={() => selectedTask(task?._id)}
                 key={task?._id}
@@ -284,7 +283,6 @@ const TaskList = ({ setToggle, toggle }) => {
             ))}
           </List>
         </Paper>
-      )}
 
       {/* Edit Task Dialog */}
       <Dialog
@@ -292,7 +290,7 @@ const TaskList = ({ setToggle, toggle }) => {
         onClose={closeEditDialog}
         sx={{
           "& .MuiDialog-paper": {
-            backgroundColor: "#2BC59A", // Custom dialog background color
+            backgroundColor: "#2BC59A",
           },
         }}
       >
@@ -310,26 +308,26 @@ const TaskList = ({ setToggle, toggle }) => {
               margin: "10px",
               "& .MuiOutlinedInput-root": {
                 "& fieldset": {
-                  borderColor: "#3C3C3C", // Green outline
+                  borderColor: "#3C3C3C",
                 },
                 "&:hover fieldset": {
-                  borderColor: "#3C3C3C", // Green outline on hover
+                  borderColor: "#3C3C3C",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#3C3C3C", // Green outline when focused
+                  borderColor: "#3C3C3C",
                 },
               },
               "& .MuiInputLabel-root": {
-                color: "#3C3C3C", // White label
+                color: "#3C3C3C",
               },
               "& .MuiInputBase-input": {
-                color: "#3C3C3C", // White text
+                color: "#3C3C3C",
               },
               "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#3C3C3C", // Green outline
+                borderColor: "#3C3C3C",
               },
               "& .MuiInputBase-input::placeholder": {
-                color: "#3C3C3C", // Green placeholder text
+                color: "#3C3C3C",
               },
             }}
           />

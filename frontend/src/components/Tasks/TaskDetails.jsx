@@ -31,7 +31,7 @@ const TaskDetails = ({ toggle }) => {
   const [editedTaskText, setEditedTaskText] = useState("");
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = import.meta.env.VITE_SECRET_KEY;
 
   const taskId = localStorage.getItem("taskId");
   const token = localStorage.getItem("token");
@@ -39,7 +39,7 @@ const TaskDetails = ({ toggle }) => {
 
   const fetchData = () => {
     axios
-      .get(`${apiUrl}/tasks`, {
+      .get(`${apiUrl}/api/tasks`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((response) => {
@@ -60,7 +60,7 @@ const TaskDetails = ({ toggle }) => {
   const addDescription = () => {
     axios
       .put(
-        `${apiUrl}/tasks/${taskId}`,
+        `${apiUrl}/api/tasks/${taskId}`,
         {
           title: task[0]?.title,
           description: descriptionList,
@@ -170,30 +170,30 @@ const TaskDetails = ({ toggle }) => {
           onKeyDown={handleKeyDown}
           sx={{
             "& .MuiOutlinedInput-root": {
-              height: 40, // Reduce height of the input
+              height: 40,
               "& fieldset": {
-                borderColor: "#2BC59A", // Border color
+                borderColor: "#2BC59A",
               },
               "&:hover fieldset": {
-                borderColor: "#2BC59A", // Border color on hover
+                borderColor: "#2BC59A",
               },
               "&.Mui-focused fieldset": {
-                borderColor: "#2BC59A", // Border color when focused
+                borderColor: "#2BC59A",
               },
             },
             "& .MuiInputLabel-root": {
-              color: "#c4c4c4", // Label color
-              fontSize: "0.9rem", // Reduce label font size
+              color: "#c4c4c4",
+              fontSize: "0.9rem",
             },
             "& .MuiInputBase-input": {
-              color: "#c4c4c4", // Input text color
-              padding: "6px 10px", // Reduce padding inside the input
+              color: "#c4c4c4",
+              padding: "6px 10px",
             },
             "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-              borderColor: "#2BC59A", // Outline border color
+              borderColor: "#2BC59A",
             },
             "& .MuiInputBase-input::placeholder": {
-              color: "#2BC59A", // Placeholder text color
+              color: "#2BC59A",
             },
           }}
         />
@@ -213,7 +213,6 @@ const TaskDetails = ({ toggle }) => {
       </Box>
 
       {/* To-Do List */}
-      {task[0]?.description?.length !== 0 && (
         <Paper
           elevation={3}
           style={{
@@ -227,7 +226,7 @@ const TaskDetails = ({ toggle }) => {
             padding: "10px",
           }}
         >
-          {task.length !== 0  ? (
+          {task.length !== 0 ? (
             <List>
               {task[0]?.description?.map((descriptionTask) => (
                 <ListItem
@@ -292,7 +291,6 @@ const TaskDetails = ({ toggle }) => {
             </Typography>
           )}
         </Paper>
-      )}
 
       {/* Edit Task Dialog */}
       <Dialog

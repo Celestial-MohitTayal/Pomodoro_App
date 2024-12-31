@@ -9,7 +9,7 @@ const Login = () => {
   const [email, pickEmail] = useState("");
   const [error, setError] = useState(null);
 
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = import.meta.env.VITE_SECRET_KEY;
 
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ const Login = () => {
 
   const handleClick = () => {
     axios
-      .post(`${apiUrl}/users/login`, {
+      .post(`${apiUrl}/api/users/login`, {
         email: email,
         password: password,
       })
@@ -51,13 +51,13 @@ const Login = () => {
           height: "100vh",
           width: "100vw",
           display: "flex",
-          overflow: 'hidden'
+          overflow: "hidden",
         }}
       >
         <Box
           sx={{
-            width: '100%',
-            height: '100vh',
+            width: "100%",
+            height: "100vh",
             position: "absolute",
             top: 0,
             left: 0,
