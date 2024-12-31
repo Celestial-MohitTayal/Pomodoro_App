@@ -37,7 +37,7 @@ const TaskDetails = ({ toggle }) => {
 
   const fetchData = () => {
     axios
-      .get("http://localhost:5000/api/tasks/", {
+      .get(`${apiUrl}/tasks`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((response) => {
@@ -58,7 +58,7 @@ const TaskDetails = ({ toggle }) => {
   const addDescription = () => {
     axios
       .put(
-        `http://localhost:5000/api/tasks/${taskId}`,
+        `${apiUrl}/tasks/${taskId}`,
         {
           title: task[0]?.title,
           description: descriptionList,

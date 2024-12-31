@@ -25,7 +25,7 @@ const Register = () => {
       setError("Password Cannot be empty");
     } else {
       axios
-        .post("http://localhost:5000/api/users/register", {
+        .post(`${apiUrl}/users/register`, {
           name: name,
           email: email,
           password: password,

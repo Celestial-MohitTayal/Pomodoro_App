@@ -9,6 +9,8 @@ const Login = () => {
   const [email, pickEmail] = useState("");
   const [error, setError] = useState(null);
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   const navigate = useNavigate();
 
   let token = localStorage.getItem("token");
@@ -20,7 +22,7 @@ const Login = () => {
 
   const handleClick = () => {
     axios
-      .post("http://localhost:5000/api/users/login", {
+      .post(`${apiUrl}/users/login`, {
         email: email,
         password: password,
       })

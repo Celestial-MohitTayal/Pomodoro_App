@@ -30,7 +30,7 @@ const TaskList = ({ setToggle, toggle }) => {
 
   const fetchData = () => {
     axios
-      .get("http://localhost:5000/api/tasks/", {
+      .get(`${apiUrl}/tasks`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then((response) => {
@@ -53,7 +53,7 @@ const TaskList = ({ setToggle, toggle }) => {
     if (newTask.trim()) {
       axios
         .post(
-          "http://localhost:5000/api/tasks/",
+          `${apiUrl}/tasks`,
           { title: newTask, description: [] },
           { headers: { Authorization: "Bearer " + token } }
         )
@@ -70,7 +70,7 @@ const TaskList = ({ setToggle, toggle }) => {
     let task = tasks.filter((task) => task._id === taskId);
     axios
       .put(
-        `http://localhost:5000/api/tasks/${taskId}`,
+        `${apiUrl}/tasks/${taskId}`,
         {
           title: task[0]?.title,
           description: task[0]?.description,
@@ -93,7 +93,7 @@ const TaskList = ({ setToggle, toggle }) => {
   // Function to delete a task
   const deleteTask = (taskId) => {
     axios
-      .delete(`http://localhost:5000/api/tasks/${taskId}`, {
+      .delete(`${apiUrl}/tasks/${taskId}`, {
         headers: { Authorization: "Bearer " + token },
       })
       .then(() => {
@@ -117,7 +117,7 @@ const TaskList = ({ setToggle, toggle }) => {
     let task = tasks.filter((task) => task._id === editingTaskId);
     axios
       .put(
-        `http://localhost:5000/api/tasks/${editingTaskId}`,
+        `${apiUrl}/tasks/${editingTaskId}`,
         {
           title: editedTaskText,
           description: task[0].description,
