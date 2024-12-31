@@ -9,6 +9,8 @@ const Register = () => {
   const [password, pickPassword] = useState("");
   const [email, pickEmail] = useState("");
   const [error, setError] = useState(null);
+  
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const navigate = useNavigate();
 

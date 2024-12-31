@@ -28,6 +28,8 @@ const TaskList = ({ setToggle, toggle }) => {
 
   const token = localStorage.getItem("token");
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   const fetchData = () => {
     axios
       .get(`${apiUrl}/tasks`, {

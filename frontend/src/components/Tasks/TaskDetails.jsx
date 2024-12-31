@@ -31,6 +31,8 @@ const TaskDetails = ({ toggle }) => {
   const [editedTaskText, setEditedTaskText] = useState("");
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   const taskId = localStorage.getItem("taskId");
   const token = localStorage.getItem("token");
   const firstRender = useRef(false);
