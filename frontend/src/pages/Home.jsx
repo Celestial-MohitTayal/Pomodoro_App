@@ -1,11 +1,11 @@
 import PomodoroDetails from "../components/Timer/pomodoroDetails";
-import TaskDetails from "../components/Tasks/TaskDetails";
+import TaskDetails from "../components/Tasks/TaskDetails/TaskDetails";
 import { Box, Typography, Button } from "@mui/material";
 import Pomodoro from "../components/Timer/pomodoro";
-import TaskList from "../components/Tasks/TaskList";
+import TaskList from "../components/Tasks/TaskList/TaskList";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar/Navbar";
 
 const Home = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -95,46 +95,37 @@ const Home = () => {
             Task Tracker
           </Typography>
 
-          {/* Task Sections */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
-              justifyContent: "space-between",
-              gap: 3,
-              width: "100%",
-            }}
-          >
-            {/* Task List */}
+          {toggle ? (
             <Box
               sx={{
-                padding: 2,
-                width: { lg: "45%", sm: "48%", xs: "90%" },
+                padding: 3,
+                width: { lg: "40%", sm: "60%", xs: "70%" },
                 backgroundColor: "#3C3C3C",
                 color: "#2BC59A",
                 borderRadius: 2,
                 boxShadow: 3,
                 textAlign: "center",
+                marginBottom: 4,
               }}
             >
               <TaskList setToggle={setToggle} toggle={toggle} />
             </Box>
-
-            {/* Task Details */}
+          ) : (
             <Box
               sx={{
-                padding: 2,
-                width: { lg: "45%", sm: "48%", xs: "90%" },
+                padding: 3,
+                width: { lg: "40%", sm: "60%", xs: "70%" },
                 backgroundColor: "#3C3C3C",
                 color: "#2BC59A",
                 borderRadius: 2,
                 boxShadow: 3,
                 textAlign: "center",
+                marginBottom: 4,
               }}
             >
               <TaskDetails toggle={toggle} setToggle={setToggle} />
             </Box>
-          </Box>
+          )}
         </Box>
 
         <PomodoroDetails

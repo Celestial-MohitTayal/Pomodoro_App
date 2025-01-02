@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "./components/Auth/Login";
-import Register from "./components/Auth/Register";
+import Login from "./components/Auth/Login/Login";
+import Register from "./components/Auth/Register/Register";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 
