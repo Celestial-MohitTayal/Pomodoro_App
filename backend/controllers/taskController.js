@@ -40,6 +40,17 @@ const updateTask = async (req, res) => {
       { new: true }
     );
     if (!task) return res.status(404).json({ message: "Task not found" });
+    let count = 0;
+    task.description.map((subtask) => {
+      if (subtask.completed == true) {
+        count++;
+      }
+    });
+    if (count == task.description.length && task.description.length !== 0 ) {
+      task.completed = true;
+    } else {
+      task.completed = false;
+    }
     res.status(200).json(task);
   } catch (err) {
     res.status(500).json({ message: "Error updating task", error: err });

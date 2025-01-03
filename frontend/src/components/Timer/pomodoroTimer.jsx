@@ -4,6 +4,8 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import alarmSound from "../../assets/alarm_beeps.mp3";
+import { useSelector } from "react-redux";
+import store from "../../store/store";
 
 const PomodoroTimer = ({ setIsStarted }) => {
   const [isRunning, setIsRunning] = useState(false);
@@ -13,6 +15,12 @@ const PomodoroTimer = ({ setIsStarted }) => {
   const [seconds, setSeconds] = useState(0);
   const [sessionMessage, setSessionMessage] = useState("");
   const alarmRef = useRef();
+
+  const tasks = useSelector((store) => {
+    store?.tasks;
+  });
+
+  console.log(tasks)
 
   useEffect(() => {
     if (!isRunning) {
@@ -178,7 +186,7 @@ const PomodoroTimer = ({ setIsStarted }) => {
           </Grid>
         </Grid>
       )}
-      
+
       {/* Alarm Clock */}
       <audio src={alarmSound} ref={alarmRef}></audio>
     </>
