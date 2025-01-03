@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
+import { addTasks, removeTasks } from "../../../store/tasksSlice";
 
 // Custom hook for task logic
-const useTaskDetailsLogic = (taskId, token, toggle, setToggle) => {
+const useTaskDetailsLogic = (taskId, token, toggle) => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
   const [descriptionList, setDescriptionList] = useState([]);
@@ -15,7 +17,9 @@ const useTaskDetailsLogic = (taskId, token, toggle, setToggle) => {
 
   const firstRender = useRef(false);
 
-  // Fetch tasks from API 
+  const dispatch = useDispatch();
+
+  // Fetch tasks from API
   const fetchData = async () => {
     try {
       const response = await fetch(
@@ -37,6 +41,11 @@ const useTaskDetailsLogic = (taskId, token, toggle, setToggle) => {
       console.error("Error fetching tasks:", error);
     }
   };
+
+  // dispatch(addTasks(descriptionList));
+  useEffect(() => {
+    dispatch(addTasks(descriptionList));
+  }, [descriptionList]);
 
   useEffect(() => {
     fetchData();
@@ -84,7 +93,7 @@ const useTaskDetailsLogic = (taskId, token, toggle, setToggle) => {
 
   // Add new subtask
   const addSubTask = () => {
-    if (newTask.trim() || time.trim()) {
+    if (newTask.trim() && time.trim()) {
       const newSubTask = {
         id: uuidv4(),
         task: newTask,
@@ -98,6 +107,9 @@ const useTaskDetailsLogic = (taskId, token, toggle, setToggle) => {
     }
   };
 
+  // const checkComplete = () => {
+
+  // }
   // Toggle task completion
   const toggleTaskCompletion = (taskIndex) => {
     setDescriptionList(
@@ -117,7 +129,7 @@ const useTaskDetailsLogic = (taskId, token, toggle, setToggle) => {
   };
 
   // Handle task edit
-  const openEditDialogHandler = (task, taskIndex) => {
+  const openEditDialogHandler = (task, time, taskIndex) => {
     setEditingTaskId(taskIndex);
     setEditedTaskText(task);
     setEditedTaskTime(time);

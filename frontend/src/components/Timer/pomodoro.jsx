@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import PomodoroTimer from "./pomodoroTimer";
 import PomodoroStart from "./pomodoroStart";
 
-const Pomodoro = () => {
-  const [isStarted, setIsStarted] = useState(false);
+const Pomodoro = ({isStarted, setIsStarted}) => {
   return (
     <>
       {isStarted ? (

@@ -11,6 +11,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser, addUser } from "../../store/userSlice";
+import { removeTasks } from "../../store/tasksSlice";
 import { styles } from "./styles"
 
 const Navbar = () => {
@@ -28,6 +29,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     localStorage.clear();
+    dispatch(removeTasks())
     navigate("/");
   };
 

@@ -21,20 +21,23 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Delete as CloseIcon, Edit as EditIcon } from "@mui/icons-material";
 import useTaskDetailsLogic from "./useTaskDetails";
 import { styles } from "./styles";
+import { useDispatch } from "react-redux";
+import { removeTasks } from "../../../store/tasksSlice";
 
-const TaskDetails = ({ toggle, setToggle }) => {
+const TaskDetails = ({ toggle, setToggle, setIsStarted }) => {
   const taskId = localStorage.getItem("taskId");
   const token = localStorage.getItem("token");
+
+  const dispatch = useDispatch();
+
 
   const {
     tasks,
     time,
-    error,
     newTask,
     editedTaskText,
     editedTaskTime,
     openEditDialog,
-    setError,
     setTime,
     setEditedTaskText,
     setEditedTaskTime,
@@ -46,7 +49,7 @@ const TaskDetails = ({ toggle, setToggle }) => {
     closeEditDialog,
     handleEditTask,
     handleKeyDown,
-  } = useTaskDetailsLogic(taskId, token, toggle, setToggle);
+  } = useTaskDetailsLogic(taskId, token, toggle);
 
   const task = tasks?.filter((task) => task._id === taskId);
 
@@ -61,7 +64,11 @@ const TaskDetails = ({ toggle, setToggle }) => {
       >
         {task[0]?.title}
         <IconButton
-          onClick={() => setToggle((prev) => !prev)}
+          onClick={() => {
+            dispatch(removeTasks()) 
+            setToggle((prev) => !prev)
+            setIsStarted(false)}
+          }
           sx={{
             color: "#D3D3D3",
             transition: "transform 0.075s",

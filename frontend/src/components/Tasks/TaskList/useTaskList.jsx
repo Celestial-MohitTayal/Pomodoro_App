@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const useTaskListLogic = (toggle, setToggle) => {
+const useTaskListLogic = (toggle, setToggle, setIsStarted) => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
   const [editingTaskId, setEditingTaskId] = useState(null);
@@ -31,6 +31,7 @@ const useTaskListLogic = (toggle, setToggle) => {
   const selectedTask = (taskId) => {
     localStorage.setItem("taskId", taskId);
     setToggle((prev) => !prev);
+    setIsStarted(true);
   };
 
   // Add a new task
@@ -56,7 +57,6 @@ const useTaskListLogic = (toggle, setToggle) => {
 
   // Toggle task completion
   const toggleTaskCompletion = async (taskId) => {
-    setToggle((prev) => !prev);
     const task = tasks.find((task) => task._id === taskId);
     try {
       const response = await fetch(`${apiUrl}/api/tasks/${taskId}`, {

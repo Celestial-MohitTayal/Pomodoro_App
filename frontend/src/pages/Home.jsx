@@ -10,6 +10,7 @@ import Navbar from "../components/Navbar/Navbar";
 const Home = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [toggle, setToggle] = useState(true);
+  const [isStarted, setIsStarted] = useState(false);
   const navigate = useNavigate();
 
   let token = localStorage.getItem("token");
@@ -32,7 +33,7 @@ const Home = () => {
           backgroundColor: "#303030",
           overflow: "hidden",
           display: "flex",
-          height: {lg:"100vh", sm:"100vh", xs:"100%"},
+          height: { lg: "100vh", sm: "100vh", xs: "100%" },
           width: "100vw",
           flexDirection: "column",
           justifyContent: "center",
@@ -73,7 +74,7 @@ const Home = () => {
             marginBottom: 4,
           }}
         >
-          <Pomodoro />
+          <Pomodoro isStarted={isStarted} setIsStarted={setIsStarted} />
         </Box>
 
         <Typography
@@ -102,7 +103,7 @@ const Home = () => {
               marginBottom: 6,
             }}
           >
-            <TaskList setToggle={setToggle} toggle={toggle} />
+            <TaskList setToggle={setToggle} toggle={toggle} setIsStarted={setIsStarted}/>
           </Box>
         ) : (
           <Box
@@ -117,7 +118,7 @@ const Home = () => {
               marginBottom: 6,
             }}
           >
-            <TaskDetails toggle={toggle} setToggle={setToggle} />
+            <TaskDetails toggle={toggle} setToggle={setToggle} setIsStarted={setIsStarted} />
           </Box>
         )}
       </Box>

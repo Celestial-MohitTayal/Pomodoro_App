@@ -20,7 +20,7 @@ import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import useTaskListLogic from "./useTaskList";
 import { styles } from "./styles";
 
-const TaskList = ({ toggle, setToggle }) => {
+const TaskList = ({ toggle, setToggle, setIsStarted }) => {
   const {
     tasks,
     newTask,
@@ -36,7 +36,7 @@ const TaskList = ({ toggle, setToggle }) => {
     closeEditDialog,
     handleEditTask,
     handleKeyDown,
-  } = useTaskListLogic(toggle, setToggle);
+  } = useTaskListLogic(toggle, setToggle, setIsStarted);
 
   return (
     <Container maxWidth="sm" style={{ marginTop: "20px" }}>
