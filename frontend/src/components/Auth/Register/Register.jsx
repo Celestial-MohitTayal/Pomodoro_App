@@ -5,11 +5,16 @@ import RegisterForm from "./RegisterForm";
 const Register = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState(null);
 
   const apiUrl = import.meta.env.VITE_SECRET_KEY;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+  }, [])
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
@@ -20,6 +25,8 @@ const Register = () => {
   const handleRegister = async () => {
     if (password === "") {
       setError("Password cannot be empty");
+    } else if (password !== confirmPassword) {
+      setError("Password does not match");
     } else {
       try {
         const requestBody = {
@@ -56,9 +63,11 @@ const Register = () => {
       name={name}
       email={email}
       password={password}
+      confirmPassword={confirmPassword}
       setName={setName}
       setEmail={setEmail}
       setPassword={setPassword}
+      setConfirmPassword={setConfirmPassword}
       error={error}
       handleRegister={handleRegister}
       navigate={navigate}

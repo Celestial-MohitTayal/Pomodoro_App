@@ -9,7 +9,7 @@ export const styles = {
     },
     form: {
       padding: 2,
-      width: { lg: "25%", sm: "45%" },
+      width: { lg: "25%", sm: "45%", xs: "70%"  },
       backgroundColor: "#3C3C3C",
       color: "#2BC59A",
       borderRadius: 2,

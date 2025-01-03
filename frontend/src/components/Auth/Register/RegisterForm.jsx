@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import Navbar from "../../Navbar/Navbar";
 import { styles } from "./styles";
@@ -7,15 +7,20 @@ const RegisterForm = ({
   name,
   email,
   password,
+  confirmPassword,
   setName,
   setEmail,
   setPassword,
+  setConfirmPassword,
   error,
   handleRegister,
   navigate,
 }) => {
+    useEffect(() => {
+        document.body.style.overflow = "hidden";
+      }, [])
   return (
-    <div style={styles.mainContainer}>
+    <>
       <Navbar />
       <Box sx={styles.container}>
         <Box sx={styles.form}>
@@ -50,6 +55,15 @@ const RegisterForm = ({
             sx={styles.input}
           />
 
+          <TextField
+            type="password"
+            placeholder="Confirm Your Password"
+            variant="outlined"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            sx={styles.input}
+          />
+
           {error && (
             <Typography variant="body2" sx={styles.errorText}>
               {error}
@@ -72,7 +86,7 @@ const RegisterForm = ({
           </Typography>
         </Box>
       </Box>
-    </div>
+    </>
   );
 };
 

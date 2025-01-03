@@ -10,7 +10,7 @@ const Profile = () => {
   const [toggle, setToggle] = useState(true);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const email = useSelector((state) => state.user?.email);
@@ -48,9 +48,9 @@ const Profile = () => {
   };
 
   return (
-    <div style={profileStyles.container}>
+    <>
       <Navbar />
-      <Box sx={profileStyles.boxWrapper}>
+      <Box sx={profileStyles.container}>
         <Box sx={profileStyles.formBox}>
           <Typography variant="h4" sx={profileStyles.title}>
             User Profile
@@ -84,9 +84,11 @@ const Profile = () => {
                 sx={profileStyles.textField}
               />
 
-              <Typography variant="body2" sx={profileStyles.errorText}>
-                {error}
-              </Typography>
+              {error && (
+                <Typography variant="body2" sx={profileStyles.errorText}>
+                  {error}
+                </Typography>
+              )}
               <br />
               <Button
                 onClick={() => setToggle(!toggle)}
@@ -109,7 +111,7 @@ const Profile = () => {
           </Button>
         </Box>
       </Box>
-    </div>
+    </>
   );
 };
 

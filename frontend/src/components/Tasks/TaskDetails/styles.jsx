@@ -23,8 +23,8 @@ export const styles = {
     listItem: (descriptionTask) => ({
       display: "flex",
       alignItems: "center",
+      borderBottom: "1px solid #ccc",
       textDecoration: descriptionTask?.completed ? "line-through" : "none",
-      borderRadius: "5px",
       marginBottom: "10px",
       padding: "8px 12px",
       transition: "all 0.2s ease",
