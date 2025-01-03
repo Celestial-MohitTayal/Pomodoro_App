@@ -1,0 +1,16 @@
+[build]
+  # Path to the directory containing the build output
+  publish = "dist"
+  
+  # The build command (for Vite, it's `vite build`)
+  command = "npm run build"
+
+# Optional: environment variables for build (you can define here if needed)
+[build.environment]
+  NODE_ENV = "production"
+
+# Optional: Redirects
+[[redirects]]
+  from = "/old-path"
+  to = "/new-path"
+  status = 301
