@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const useTaskListLogic = (toggle, setToggle, setIsStarted) => {
+const useTaskListLogic = (toggle, setToggle) => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
   const [editingTaskId, setEditingTaskId] = useState(null);
@@ -31,7 +31,6 @@ const useTaskListLogic = (toggle, setToggle, setIsStarted) => {
   const selectedTask = (taskId) => {
     localStorage.setItem("taskId", taskId);
     setToggle((prev) => !prev);
-    setIsStarted(true);
   };
 
   // Add a new task
@@ -56,31 +55,31 @@ const useTaskListLogic = (toggle, setToggle, setIsStarted) => {
   };
 
   // Toggle task completion
-  const toggleTaskCompletion = async (taskId) => {
-    const task = tasks.find((task) => task._id === taskId);
-    try {
-      const response = await fetch(`${apiUrl}/api/tasks/${taskId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          title: task.title,
-          description: task.description,
-          completed: !task.completed,
-        }),
-      });
-      const updatedTask = await response.json();
-      setTasks((prevTasks) =>
-        prevTasks.map((item) =>
-          item._id === taskId ? { ...item, completed: updatedTask.completed } : item
-        )
-      );
-    } catch (error) {
-      console.error("Error updating task completion:", error);
-    }
-  };
+  // const toggleTaskCompletion = async (taskId) => {
+  //   const task = tasks.find((task) => task._id === taskId);
+  //   try {
+  //     const response = await fetch(`${apiUrl}/api/tasks/${taskId}`, {
+  //       method: "PUT",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: "Bearer " + token,
+  //       },
+  //       body: JSON.stringify({
+  //         title: task.title,
+  //         description: task.description,
+  //         completed: !task.completed,
+  //       }),
+  //     });
+  //     const updatedTask = await response.json();
+  //     setTasks((prevTasks) =>
+  //       prevTasks.map((item) =>
+  //         item._id === taskId ? { ...item, completed: updatedTask.completed } : item
+  //       )
+  //     );
+  //   } catch (error) {
+  //     console.error("Error updating task completion:", error);
+  //   }
+  // };
 
   // Delete a task
   const deleteTask = async (taskId) => {
@@ -151,7 +150,7 @@ const useTaskListLogic = (toggle, setToggle, setIsStarted) => {
     selectedTask,
     setEditedTaskText,
     addTask,
-    toggleTaskCompletion,
+    // toggleTaskCompletion,
     deleteTask,
     openEditDialogHandler,
     closeEditDialog,

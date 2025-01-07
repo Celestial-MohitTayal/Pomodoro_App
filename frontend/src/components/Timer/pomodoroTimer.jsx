@@ -4,8 +4,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import alarmSound from "../../assets/alarm_beeps.mp3";
-import { useSelector } from "react-redux";
-import store from "../../store/store";
+// import { useSelector } from "react-redux";
 
 const PomodoroTimer = ({ setIsStarted }) => {
   const [isRunning, setIsRunning] = useState(false);
@@ -16,23 +15,14 @@ const PomodoroTimer = ({ setIsStarted }) => {
   const [sessionMessage, setSessionMessage] = useState("");
   const alarmRef = useRef();
 
-  const tasks = useSelector((store) => {
-    store?.tasks;
-  });
-
-  console.log(tasks)
+  // const tasks = useSelector((state) => state.tasks);
 
   useEffect(() => {
     if (!isRunning) {
       if (isBreak) {
-        if (count === 3) {
-          setCount(0);
-          setIsStarted(false);
-        } else {
-          setCount((prevCount) => prevCount + 1);
-          setMinute(5);
-          setSeconds(0);
-        }
+        setCount((prevCount) => prevCount + 1);
+        setMinute(5);
+        setSeconds(0);
       } else {
         setMinute(25);
         setSeconds(0);
@@ -78,7 +68,11 @@ const PomodoroTimer = ({ setIsStarted }) => {
             setIsBreak((prevIsBreak) => !prevIsBreak);
             alarmRef.current.pause();
             setSessionMessage("");
-          }, 5000);
+            if (count == 3 && !isBreak) {
+              setCount(0);
+              setIsStarted(false);
+            }
+          }, 2900);
         }
       }, 0.5);
       return () => clearInterval(intervalPom);
@@ -137,37 +131,39 @@ const PomodoroTimer = ({ setIsStarted }) => {
         </Typography>
       ) : (
         <Grid container spacing={2} justifyContent="center">
-          <Grid item>
-            <Button
-              variant="contained"
-              color="default"
-              onClick={startTimer}
-              startIcon={<PlayArrowIcon />}
-              sx={{
-                boxShadow: 3,
-                "&:hover": { boxShadow: 6 },
-                fontSize: "16px",
-              }}
-            >
-              Start
-            </Button>
-          </Grid>
-
-          <Grid item>
-            <Button
-              variant="contained"
-              color="default"
-              onClick={pauseTimer}
-              startIcon={<PauseIcon />}
-              sx={{
-                boxShadow: 3,
-                "&:hover": { boxShadow: 6 },
-                fontSize: "16px",
-              }}
-            >
-              Pause
-            </Button>
-          </Grid>
+          {!isRunning ? (
+            <Grid item>
+              <Button
+                variant="contained"
+                color="default"
+                onClick={startTimer}
+                startIcon={<PlayArrowIcon />}
+                sx={{
+                  boxShadow: 3,
+                  "&:hover": { boxShadow: 6 },
+                  fontSize: "16px",
+                }}
+              >
+                Start
+              </Button>
+            </Grid>
+          ) : (
+            <Grid item>
+              <Button
+                variant="contained"
+                color="default"
+                onClick={pauseTimer}
+                startIcon={<PauseIcon />}
+                sx={{
+                  boxShadow: 3,
+                  "&:hover": { boxShadow: 6 },
+                  fontSize: "16px",
+                }}
+              >
+                Pause
+              </Button>
+            </Grid>
+          )}
 
           <Grid item>
             <Button

@@ -78,7 +78,7 @@ const TaskList = ({ toggle, setToggle, setIsStarted }) => {
             <ListItem key={task._id} sx={styles.listItem(task)}>
               <Checkbox
                 checked={task.completed}
-                onChange={() => toggleTaskCompletion(task._id)}
+                // onChange={() => toggleTaskCompletion(task._id)}
                 color="disabled"
                 sx={styles.checkbox}
               />

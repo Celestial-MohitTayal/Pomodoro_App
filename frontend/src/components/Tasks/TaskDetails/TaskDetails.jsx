@@ -24,14 +24,14 @@ import { styles } from "./styles";
 import { useDispatch } from "react-redux";
 import { removeTasks } from "../../../store/tasksSlice";
 
-const TaskDetails = ({ toggle, setToggle, setIsStarted }) => {
+const TaskDetails = ({ toggle, setToggle }) => {
   const taskId = localStorage.getItem("taskId");
   const token = localStorage.getItem("token");
 
   const dispatch = useDispatch();
 
-
   const {
+    error,
     tasks,
     time,
     newTask,
@@ -65,10 +65,9 @@ const TaskDetails = ({ toggle, setToggle, setIsStarted }) => {
         {task[0]?.title}
         <IconButton
           onClick={() => {
-            dispatch(removeTasks()) 
-            setToggle((prev) => !prev)
-            setIsStarted(false)}
-          }
+            dispatch(removeTasks());
+            setToggle((prev) => !prev);
+          }}
           sx={{
             color: "#D3D3D3",
             transition: "transform 0.075s",
@@ -103,6 +102,11 @@ const TaskDetails = ({ toggle, setToggle, setIsStarted }) => {
           <AddIcon />
         </IconButton>
       </Box>
+      {error && (
+        <Typography variant="body2" sx={styles.errorText}>
+          {error}
+        </Typography>
+      )}
 
       {/* Task List */}
       <Paper elevation={3} sx={styles.paper}>
@@ -191,7 +195,5 @@ const TaskDetails = ({ toggle, setToggle, setIsStarted }) => {
     </Container>
   );
 };
-
-
 
 export default TaskDetails;

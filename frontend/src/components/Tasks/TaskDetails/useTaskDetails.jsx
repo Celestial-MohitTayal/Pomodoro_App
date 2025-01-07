@@ -14,6 +14,7 @@ const useTaskDetailsLogic = (taskId, token, toggle) => {
   const [editedTaskText, setEditedTaskText] = useState("");
   const [editedTaskTime, setEditedTaskTime] = useState("");
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [error, setError] = useState(null);
 
   const firstRender = useRef(false);
 
@@ -56,6 +57,18 @@ const useTaskDetailsLogic = (taskId, token, toggle) => {
   // Update task description via PUT request
   const addDescription = async () => {
     try {
+      let count = 0;
+      descriptionList.map((subtask) => {
+        if (subtask.completed == true) {
+          count++;
+        }
+      });
+      if (count == descriptionList.length && descriptionList.length !== 0) {
+        task[0].completed = true;
+      } else {
+        task[0].completed = false;
+      }
+
       const response = await fetch(
         `${import.meta.env.VITE_SECRET_KEY}/api/tasks/${taskId}`,
         {
@@ -93,23 +106,24 @@ const useTaskDetailsLogic = (taskId, token, toggle) => {
 
   // Add new subtask
   const addSubTask = () => {
-    if (newTask.trim() && time.trim()) {
+    const regex = /^[0-9]*\.?[0-9]*$/;
+    if (newTask.trim() && time.trim() && regex.test(time)) {
       const newSubTask = {
         id: uuidv4(),
         task: newTask,
-        time: time,
+        time: Number(time),
         completed: false,
       };
       setDescriptionList([...descriptionList, newSubTask]);
       setNewTask("");
       setTime("");
       setUpdateList((prev) => !prev);
+    } else {
+      setError("Please enter only numbers in time field.");
+      setTimeout(() => setError(null), 3000);
     }
   };
 
-  // const checkComplete = () => {
-
-  // }
   // Toggle task completion
   const toggleTaskCompletion = (taskIndex) => {
     setDescriptionList(
@@ -162,6 +176,7 @@ const useTaskDetailsLogic = (taskId, token, toggle) => {
   };
 
   return {
+    error,
     tasks,
     time,
     newTask,
