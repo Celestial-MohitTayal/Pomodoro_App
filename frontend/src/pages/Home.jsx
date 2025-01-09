@@ -6,9 +6,11 @@ import TaskList from "../components/Tasks/TaskList/TaskList";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
+import Game from "../components/Game/bubbleGame";
 
 const Home = () => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [isBreak, setIsBreak] = useState(false);
   const [toggle, setToggle] = useState(true);
   const navigate = useNavigate();
 
@@ -23,7 +25,9 @@ const Home = () => {
   const openDialogBox = () => {
     setOpenDialog(true);
   };
-
+  // return (
+  //   <Game />
+  // )
   return (
     <>
       <Navbar />
@@ -73,52 +77,84 @@ const Home = () => {
             marginBottom: 4,
           }}
         >
-          <Pomodoro />
+          <Pomodoro isBreak={isBreak} setIsBreak={setIsBreak} />
         </Box>
 
-        <Typography
-          variant="h3"
-          component="div"
-          sx={{
-            fontFamily: "Times New Roman, serif",
-            fontWeight: "bold",
-            letterSpacing: "0.1rem",
-            color: "#c4c4c4",
-          }}
-        >
-          Task Tracker
-        </Typography>
-
-        {toggle ? (
-          <Box
-            sx={{
-              padding: 3,
-              width: { lg: "40%", sm: "60%", xs: "70%" },
-              backgroundColor: "#3C3C3C",
-              color: "#2BC59A",
-              borderRadius: 2,
-              boxShadow: 3,
-              textAlign: "center",
-              marginBottom: 6,
-            }}
-          >
-            <TaskList setToggle={setToggle} toggle={toggle} />
-          </Box>
+        {isBreak ? (
+          <>
+            <Typography
+              variant="h3"
+              component="div"
+              sx={{
+                fontFamily: "Times New Roman, serif",
+                fontWeight: "bold",
+                letterSpacing: "0.1rem",
+                color: "#c4c4c4",
+              }}
+            >
+              Break Time
+            </Typography>
+            <Box
+                sx={{
+                  width: { lg: "60%", sm: "90%", xs: "90%" },
+                  backgroundColor: "#3C3C3C",
+                  color: "#2BC59A",
+                  borderRadius: 2,
+                  boxShadow: 3,
+                  textAlign: "center",
+                  marginBottom: 6,
+                }}
+              >
+                <Game />
+              </Box>
+          </>
         ) : (
-          <Box
-            sx={{
-              padding: 3,
-              width: { lg: "40%", sm: "60%", xs: "70%" },
-              backgroundColor: "#3C3C3C",
-              color: "#2BC59A",
-              borderRadius: 2,
-              boxShadow: 3,
-              textAlign: "center",
-              marginBottom: 6,
-            }}
-          >
-            <TaskDetails toggle={toggle} setToggle={setToggle} />
-          </Box>
+          <>
+            <Typography
+              variant="h3"
+              component="div"
+              sx={{
+                fontFamily: "Times New Roman, serif",
+                fontWeight: "bold",
+                letterSpacing: "0.1rem",
+                color: "#c4c4c4",
+              }}
+            >
+              Task Tracker
+            </Typography>
+
+            {toggle ? (
+              <Box
+                sx={{
+                  padding: 3,
+                  width: { lg: "40%", sm: "60%", xs: "70%" },
+                  backgroundColor: "#3C3C3C",
+                  color: "#2BC59A",
+                  borderRadius: 2,
+                  boxShadow: 3,
+                  textAlign: "center",
+                  marginBottom: 6,
+                }}
+              >
+                <TaskList setToggle={setToggle} toggle={toggle} />
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  padding: 3,
+                  width: { lg: "40%", sm: "60%", xs: "70%" },
+                  backgroundColor: "#3C3C3C",
+                  color: "#2BC59A",
+                  borderRadius: 2,
+                  boxShadow: 3,
+                  textAlign: "center",
+                  marginBottom: 6,
+                }}
+              >
+                <TaskDetails toggle={toggle} setToggle={setToggle} />
+              </Box>
+            )}
+          </>
         )}
       </Box>
 

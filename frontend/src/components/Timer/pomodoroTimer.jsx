@@ -6,9 +6,9 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import alarmSound from "../../assets/alarm_beeps.mp3";
 // import { useSelector } from "react-redux";
 
-const PomodoroTimer = ({ setIsStarted }) => {
+const PomodoroTimer = ({ setIsStarted, isBreak, setIsBreak }) => {
   const [isRunning, setIsRunning] = useState(false);
-  const [isBreak, setIsBreak] = useState(false);
+  // const [isBreak, setIsBreak] = useState(false);
   const [count, setCount] = useState(0);
   const [minute, setMinute] = useState(25);
   const [seconds, setSeconds] = useState(0);
@@ -69,10 +69,11 @@ const PomodoroTimer = ({ setIsStarted }) => {
             alarmRef.current.pause();
             setSessionMessage("");
             if (count == 3 && !isBreak) {
+              setIsBreak(false);
               setCount(0);
               setIsStarted(false);
             }
-          }, 2900);
+          }, 3000);
         }
       }, 0.5);
       return () => clearInterval(intervalPom);
