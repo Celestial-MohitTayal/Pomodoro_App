@@ -4,18 +4,26 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import alarmSound from "../../assets/alarm_beeps.mp3";
-// import { useSelector } from "react-redux";
+import VolumeOffIcon from "@mui/icons-material/VolumeOff";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 
 const PomodoroTimer = ({ setIsStarted, isBreak, setIsBreak }) => {
-  const [isRunning, setIsRunning] = useState(false);
-  // const [isBreak, setIsBreak] = useState(false);
-  const [count, setCount] = useState(0);
-  const [minute, setMinute] = useState(25);
-  const [seconds, setSeconds] = useState(0);
   const [sessionMessage, setSessionMessage] = useState("");
+  const [isRunning, setIsRunning] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [seconds, setSeconds] = useState(0);
+  const [minute, setMinute] = useState(25);
+  const [count, setCount] = useState(0);
   const alarmRef = useRef();
 
-  // const tasks = useSelector((state) => state.tasks);
+  const handleToggleMute = () => {
+    if (alarmRef.current) {
+      setIsMuted((prev) => {
+        alarmRef.current.muted = !prev;
+        return !prev;
+      });
+    }
+  };
 
   useEffect(() => {
     if (!isRunning) {
@@ -23,9 +31,11 @@ const PomodoroTimer = ({ setIsStarted, isBreak, setIsBreak }) => {
         setCount((prevCount) => prevCount + 1);
         setMinute(5);
         setSeconds(0);
+        setIsRunning(true);
       } else {
         setMinute(25);
         setSeconds(0);
+        setIsRunning(true);
       }
     }
   }, [isBreak]);
@@ -75,7 +85,7 @@ const PomodoroTimer = ({ setIsStarted, isBreak, setIsBreak }) => {
             }
           }, 3000);
         }
-      }, 0.5);
+      }, 1000);
       return () => clearInterval(intervalPom);
     }
   }, [isRunning, seconds, minute, isBreak]);
@@ -103,6 +113,14 @@ const PomodoroTimer = ({ setIsStarted, isBreak, setIsBreak }) => {
 
   return (
     <>
+      <div>
+        <button
+          onClick={handleToggleMute}
+          style={{ background: "none", border: "none", cursor: "pointer" }}
+        >
+          {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
+        </button>
+      </div>
       <Typography
         variant="h3"
         sx={{ marginBottom: 2, fontWeight: "bold", fontFamily: "unset" }}
