@@ -41,7 +41,7 @@ const Home = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          paddingTop: { lg: 4, sm: 4, xs: 24 },
+          paddingTop: { lg: 10, sm: 10, xs: 24 },
           gap: 3,
         }}
       >
