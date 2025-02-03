@@ -2,10 +2,6 @@ import React from "react";
 import { Typography, Button } from "@mui/material";
 
 const PomodoroStart = ({ setIsStarted }) => {
-  const startTimer = () => {
-    setIsStarted(true);
-  };
-
   return (
     <>
       <Typography variant="h5" sx={{ color: "#2BC59A", margin: "16px" }}>
@@ -16,8 +12,8 @@ const PomodoroStart = ({ setIsStarted }) => {
       </Typography>
       <Button
         variant="contained"
+        onClick={() => setIsStarted(true)}
         color="default"
-        onClick={startTimer}
         sx={{
           boxShadow: 3,
           "&:hover": { boxShadow: 6 },
@@ -27,8 +23,8 @@ const PomodoroStart = ({ setIsStarted }) => {
       >
         Get Started!
       </Button>
-      <Typography variant="body1" sx={{ color: "#8f8f8f", marginTop: "8px",}}>
-        Click on above button to start focusing.
+      <Typography variant="body1" sx={{ color: "#8f8f8f", marginTop: "8px" }}>
+        click on above button to start focusing.
       </Typography>
     </>
   );

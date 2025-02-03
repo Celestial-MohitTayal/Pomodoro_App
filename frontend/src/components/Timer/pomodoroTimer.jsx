@@ -4,30 +4,38 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import alarmSound from "../../assets/alarm_beeps.mp3";
+import VolumeOffIcon from "@mui/icons-material/VolumeOff";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 
-const PomodoroTimer = ({ setIsStarted }) => {
-  const [isRunning, setIsRunning] = useState(false);
-  const [isBreak, setIsBreak] = useState(false);
-  const [count, setCount] = useState(0);
-  const [minute, setMinute] = useState(25);
-  const [seconds, setSeconds] = useState(0);
+const PomodoroTimer = ({ setIsStarted, isBreak, setIsBreak }) => {
   const [sessionMessage, setSessionMessage] = useState("");
+  const [isRunning, setIsRunning] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [seconds, setSeconds] = useState(0);
+  const [minute, setMinute] = useState(25);
+  const [count, setCount] = useState(0);
   const alarmRef = useRef();
+
+  const handleToggleMute = () => {
+    if (alarmRef.current) {
+      setIsMuted((prev) => {
+        alarmRef.current.muted = !prev;
+        return !prev;
+      });
+    }
+  };
 
   useEffect(() => {
     if (!isRunning) {
       if (isBreak) {
-        if (count === 3) {
-          setCount(0);
-          setIsStarted(false);
-        } else {
-          setCount((prevCount) => prevCount + 1);
-          setMinute(5);
-          setSeconds(0);
-        }
+        setCount((prevCount) => prevCount + 1);
+        setMinute(5);
+        setSeconds(0);
+        setIsRunning(true);
       } else {
         setMinute(25);
         setSeconds(0);
+        setIsRunning(true);
       }
     }
   }, [isBreak]);
@@ -70,9 +78,14 @@ const PomodoroTimer = ({ setIsStarted }) => {
             setIsBreak((prevIsBreak) => !prevIsBreak);
             alarmRef.current.pause();
             setSessionMessage("");
-          }, 5000);
+            if (count == 3 && !isBreak) {
+              setIsBreak(false);
+              setCount(0);
+              setIsStarted(false);
+            }
+          }, 3000);
         }
-      }, 0.5);
+      }, 1000);
       return () => clearInterval(intervalPom);
     }
   }, [isRunning, seconds, minute, isBreak]);
@@ -100,6 +113,14 @@ const PomodoroTimer = ({ setIsStarted }) => {
 
   return (
     <>
+      <div>
+        <button
+          onClick={handleToggleMute}
+          style={{ background: "none", border: "none", cursor: "pointer" }}
+        >
+          {isMuted ? <VolumeOffIcon /> : <VolumeUpIcon />}
+        </button>
+      </div>
       <Typography
         variant="h3"
         sx={{ marginBottom: 2, fontWeight: "bold", fontFamily: "unset" }}
@@ -129,37 +150,39 @@ const PomodoroTimer = ({ setIsStarted }) => {
         </Typography>
       ) : (
         <Grid container spacing={2} justifyContent="center">
-          <Grid item>
-            <Button
-              variant="contained"
-              color="default"
-              onClick={startTimer}
-              startIcon={<PlayArrowIcon />}
-              sx={{
-                boxShadow: 3,
-                "&:hover": { boxShadow: 6 },
-                fontSize: "16px",
-              }}
-            >
-              Start
-            </Button>
-          </Grid>
-
-          <Grid item>
-            <Button
-              variant="contained"
-              color="default"
-              onClick={pauseTimer}
-              startIcon={<PauseIcon />}
-              sx={{
-                boxShadow: 3,
-                "&:hover": { boxShadow: 6 },
-                fontSize: "16px",
-              }}
-            >
-              Pause
-            </Button>
-          </Grid>
+          {!isRunning ? (
+            <Grid item>
+              <Button
+                variant="contained"
+                color="default"
+                onClick={startTimer}
+                startIcon={<PlayArrowIcon />}
+                sx={{
+                  boxShadow: 3,
+                  "&:hover": { boxShadow: 6 },
+                  fontSize: "16px",
+                }}
+              >
+                Start
+              </Button>
+            </Grid>
+          ) : (
+            <Grid item>
+              <Button
+                variant="contained"
+                color="default"
+                onClick={pauseTimer}
+                startIcon={<PauseIcon />}
+                sx={{
+                  boxShadow: 3,
+                  "&:hover": { boxShadow: 6 },
+                  fontSize: "16px",
+                }}
+              >
+                Pause
+              </Button>
+            </Grid>
+          )}
 
           <Grid item>
             <Button
@@ -178,7 +201,7 @@ const PomodoroTimer = ({ setIsStarted }) => {
           </Grid>
         </Grid>
       )}
-      
+
       {/* Alarm Clock */}
       <audio src={alarmSound} ref={alarmRef}></audio>
     </>
